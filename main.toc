@@ -1,0 +1,4 @@
+\beamer@sectionintoc {1}{History and Background}{3}{0}{1}
+\beamer@sectionintoc {2}{Algorithms and Numerical Experiments}{14}{0}{2}
+\beamer@sectionintoc {3}{Extensions of Proximal Galerkin}{40}{0}{3}
+\beamer@sectionintoc {4}{The Latent Variable Proximal Point Method}{48}{0}{4}

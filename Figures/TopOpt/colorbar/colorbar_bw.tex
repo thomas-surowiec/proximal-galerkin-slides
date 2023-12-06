@@ -1,0 +1,70 @@
+\documentclass[tikz]{standalone}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{pgfplots}
+\usepackage{graphicx}
+\pgfplotsset{compat=newest}
+
+\begin{document}
+
+\begin{tikzpicture}[font=\large]
+\pgfmathsetlengthmacro\MajorTickLength{
+  \pgfkeysvalueof{/pgfplots/major tick length} * 0.5
+}
+\begin{axis}[
+title={},
+xmin=0, xmax=4e1,
+ymin=0, ymax=1,
+axis on top,
+scaled x ticks=false,
+scaled y ticks=false,
+xtick=\empty,
+xticklabels=\empty,
+yticklabel pos=right,
+% yticklabel=[pos=right,\num[round-mode=places,round-precision=1]{\tick}],
+% See section 74 of pgf manual http://www.texample.net/media/pgf/builds/pgfmanualCVS2012-11-04.pdf
+% y tick label style={
+%   /pgf/number format/.cd,
+%   % std,
+%   % sci,
+%   sci zerofill,
+%   %fixed,
+%   %fixed zerofill,
+%   precision=0,
+%   /tikz/.cd  
+% },
+% ytick={1.5,0,-1.5},
+extra y ticks={
+   \pgfkeysvalueof{/pgfplots/ymin},
+   \pgfkeysvalueof{/pgfplots/ymax}
+},
+every extra y tick/.style={
+% extra y tick style={
+  /pgf/number format/.cd,
+  % std,
+  % sci,
+  sci zerofill,
+  % fixed,
+  % fixed zerofill,
+  precision=1,
+  /tikz/.cd 
+},
+% ylabel={\LARGE $u$},
+ylabel style={rotate=-90},
+width=1.85cm,
+height=7.5cm,
+major tick length=\MajorTickLength
+]
+\addplot graphics [
+includegraphics cmd=\pgfimage,
+xmin=\pgfkeysvalueof{/pgfplots/xmin}, 
+xmax=\pgfkeysvalueof{/pgfplots/xmax}, 
+ymin=\pgfkeysvalueof{/pgfplots/ymin}, 
+ymax=\pgfkeysvalueof{/pgfplots/ymax}
+] {./colorbar_bw.png};
+\end{axis}
+\end{tikzpicture}
+
+\end{document}
