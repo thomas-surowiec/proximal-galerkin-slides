@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.10.20)  6 DEC 2023 21:51
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.10.20)  7 DEC 2023 09:48
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1905,42 +1905,143 @@ Package pdftex.def Info: logos/proxi-galerkin-frame.png  used on input line 105
  [48
 
 ]
+File: logos/proxi-galerkin-frame.png Graphic file (type png)
+<use logos/proxi-galerkin-frame.png>
+Package pdftex.def Info: logos/proxi-galerkin-frame.png  used on input line 107
+1.
+(pdftex.def)             Requested size: 99.58464pt x 37.20195pt.
+ [49
 
-LaTeX Warning: Citation `MWeiser_etal_2005' on page 49 undefined on input line 
-1093.
+]
+File: logos/proxi-galerkin-frame.png Graphic file (type png)
+<use logos/proxi-galerkin-frame.png>
+Package pdftex.def Info: logos/proxi-galerkin-frame.png  used on input line 107
+1.
+(pdftex.def)             Requested size: 99.58464pt x 37.20195pt.
 
+[50
 
-LaTeX Warning: Citation `Hintermller2004' on page 49 undefined on input line 10
-93.
+]
+File: logos/proxi-galerkin-frame.png Graphic file (type png)
+<use logos/proxi-galerkin-frame.png>
+Package pdftex.def Info: logos/proxi-galerkin-frame.png  used on input line 107
+1.
+(pdftex.def)             Requested size: 99.58464pt x 37.20195pt.
+ [51
 
+]
+File: logos/proxi-galerkin-frame.png Graphic file (type png)
+<use logos/proxi-galerkin-frame.png>
+Package pdftex.def Info: logos/proxi-galerkin-frame.png  used on input line 108
+6.
+(pdftex.def)             Requested size: 99.58464pt x 37.20195pt.
+ [52
 
-LaTeX Warning: Citation `BMartinet_1970' on page 49 undefined on input line 109
-3.
+]
+File: logos/proxi-galerkin-frame.png Graphic file (type png)
+<use logos/proxi-galerkin-frame.png>
+Package pdftex.def Info: logos/proxi-galerkin-frame.png  used on input line 108
+6.
+(pdftex.def)             Requested size: 99.58464pt x 37.20195pt.
+ [53
 
+]
+File: logos/proxi-galerkin-frame.png Graphic file (type png)
+<use logos/proxi-galerkin-frame.png>
+Package pdftex.def Info: logos/proxi-galerkin-frame.png  used on input line 108
+6.
+(pdftex.def)             Requested size: 99.58464pt x 37.20195pt.
+ [54
 
-LaTeX Warning: Citation `MTeboulle_2018' on page 49 undefined on input line 109
-3.
+]
+File: logos/proxi-galerkin-frame.png Graphic file (type png)
+<use logos/proxi-galerkin-frame.png>
+Package pdftex.def Info: logos/proxi-galerkin-frame.png  used on input line 108
+6.
+(pdftex.def)             Requested size: 99.58464pt x 37.20195pt.
+ [55
 
-
-LaTeX Warning: Citation `BREGMAN1967200' on page 49 undefined on input line 109
-3.
-
-
-LaTeX Warning: Citation `RTRockafellar_1970' on page 49 undefined on input line
- 1093.
-
+]
+<Figures/lvpp-transform-table.png, id=614, 1318.9275pt x 271.0125pt>
+File: Figures/lvpp-transform-table.png Graphic file (type png)
+<use Figures/lvpp-transform-table.png>
+Package pdftex.def Info: Figures/lvpp-transform-table.png  used on input line 1
+098.
+(pdftex.def)             Requested size: 349.72987pt x 71.85931pt.
 File: logos/proxi-galerkin-frame.png Graphic file (type png)
 <use logos/proxi-galerkin-frame.png>
 Package pdftex.def Info: logos/proxi-galerkin-frame.png  used on input line 109
-3.
+8.
+(pdftex.def)             Requested size: 99.58464pt x 37.20195pt.
+ [56
+
+ <./Figures/lvpp-transform-table.png>]
+File: Figures/lvpp-transform-table.png Graphic file (type png)
+<use Figures/lvpp-transform-table.png>
+Package pdftex.def Info: Figures/lvpp-transform-table.png  used on input line 1
+098.
+(pdftex.def)             Requested size: 349.72987pt x 71.85931pt.
+File: logos/proxi-galerkin-frame.png Graphic file (type png)
+<use logos/proxi-galerkin-frame.png>
+Package pdftex.def Info: logos/proxi-galerkin-frame.png  used on input line 109
+8.
 (pdftex.def)             Requested size: 99.58464pt x 37.20195pt.
 
-Overfull \vbox (600.1703pt too high) detected at line 1093
- []
-
-[49
+[57
 
 ]
+File: Figures/lvpp-transform-table.png Graphic file (type png)
+<use Figures/lvpp-transform-table.png>
+Package pdftex.def Info: Figures/lvpp-transform-table.png  used on input line 1
+098.
+(pdftex.def)             Requested size: 349.72987pt x 71.85931pt.
+File: logos/proxi-galerkin-frame.png Graphic file (type png)
+<use logos/proxi-galerkin-frame.png>
+Package pdftex.def Info: logos/proxi-galerkin-frame.png  used on input line 109
+8.
+(pdftex.def)             Requested size: 99.58464pt x 37.20195pt.
+ [58
+
+]
+File: Figures/lvpp-transform-table.png Graphic file (type png)
+<use Figures/lvpp-transform-table.png>
+Package pdftex.def Info: Figures/lvpp-transform-table.png  used on input line 1
+098.
+(pdftex.def)             Requested size: 349.72987pt x 71.85931pt.
+File: logos/proxi-galerkin-frame.png Graphic file (type png)
+<use logos/proxi-galerkin-frame.png>
+Package pdftex.def Info: logos/proxi-galerkin-frame.png  used on input line 109
+8.
+(pdftex.def)             Requested size: 99.58464pt x 37.20195pt.
+ [59
+
+]
+File: Figures/lvpp-transform-table.png Graphic file (type png)
+<use Figures/lvpp-transform-table.png>
+Package pdftex.def Info: Figures/lvpp-transform-table.png  used on input line 1
+098.
+(pdftex.def)             Requested size: 349.72987pt x 71.85931pt.
+File: logos/proxi-galerkin-frame.png Graphic file (type png)
+<use logos/proxi-galerkin-frame.png>
+Package pdftex.def Info: logos/proxi-galerkin-frame.png  used on input line 109
+8.
+(pdftex.def)             Requested size: 99.58464pt x 37.20195pt.
+ [60
+
+]
+<Figures/lvpp-spp.png, id=646, 767.86874pt x 322.20375pt>
+File: Figures/lvpp-spp.png Graphic file (type png)
+<use Figures/lvpp-spp.png>
+Package pdftex.def Info: Figures/lvpp-spp.png  used on input line 1108.
+(pdftex.def)             Requested size: 205.72198pt x 86.32262pt.
+File: logos/proxi-galerkin-frame.png Graphic file (type png)
+<use logos/proxi-galerkin-frame.png>
+Package pdftex.def Info: logos/proxi-galerkin-frame.png  used on input line 110
+8.
+(pdftex.def)             Requested size: 99.58464pt x 37.20195pt.
+ [61
+
+ <./Figures/lvpp-spp.png>]
 \tf@nav=\write6
 \openout6 = `main.nav'.
 
@@ -1955,22 +2056,19 @@ Overfull \vbox (600.1703pt too high) detected at line 1093
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 
-LaTeX Warning: There were undefined references.
-
-
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 830053633F079A1F2CA1EE2D2C18837D;861.
  ) 
 Here is how much of TeX's memory you used:
- 31332 strings out of 478268
- 638462 string characters out of 5846346
- 928536 words of memory out of 5000000
- 48730 multiletter control sequences out of 15000+600000
+ 31393 strings out of 478268
+ 639516 string characters out of 5846346
+ 922588 words of memory out of 5000000
+ 48767 multiletter control sequences out of 15000+600000
  509500 words of font info for 155 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 128i,34n,122p,1488b,828s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,34n,122p,503b,828s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb
 ></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb>
@@ -2010,10 +2108,10 @@ e1/public/amsfonts/cm/cmtt8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1
 /public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/p
 ublic/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2022/texmf-dist/fonts/typ
 e1/public/amsfonts/symbols/msbm7.pfb>
-Output written on main.pdf (49 pages, 8819414 bytes).
+Output written on main.pdf (61 pages, 8948598 bytes).
 PDF statistics:
- 758 PDF objects out of 1000 (max. 8388607)
- 550 compressed objects within 6 object streams
- 127 named destinations out of 1000 (max. 500000)
- 236 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 839 PDF objects out of 1000 (max. 8388607)
+ 614 compressed objects within 7 object streams
+ 149 named destinations out of 1000 (max. 500000)
+ 246 words of extra memory for PDF output out of 10000 (max. 10000000)
 

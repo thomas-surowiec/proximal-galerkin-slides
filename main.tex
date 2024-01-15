@@ -234,7 +234,7 @@ Formally, we can introduce \textbf{latent variables} $\psi, \widetilde{\psi}$ su
 				~\text{such that~}
 				\\
 				&\begin{alignedat}{4}
-					\int_\Omega \alpha \nabla u\cdot \nabla v \dd x + \int_\Omega \psi v \dd x &= \int_\Omega (\alpha f + w)\, v \dd x
+					\int_\Omega \alpha \nabla u\cdot \nabla v \dd x + \int_\Omega \psi v \dd x &= \int_\Omega (\alpha f + \widetilde{\psi})\, v \dd x
 					&&~\fa v \in H^1_0(\Omega)
 					\,,
 					\\
@@ -384,7 +384,7 @@ We refer to the following as the $(\mathbb{P}_p\text{-bubble},\mathbb{P}_{p-1}\t
 %\end{subequations}
 \vspace{-3ex}
 \begin{itemize}
-\item Example, $p = 1$: $V_h$ is composed of the direct sum of continuous piecewise linear functions and 3rd order bubble functions and $W_h$ is piecewise constants. \pause
+\item Example, $p = 1$: $V_h$ is composed of the direct sum of piecewise linear functions and 3rd order bubble functions and $W_h$ is piecewise constants. \pause
 \item
 For shape regular $\mathcal{T}_h$, these pairs of spaces are \textbf{stable} for the linearized, singularly perturbed saddle point problems.
 \item 
@@ -559,7 +559,7 @@ where $r = q = 1.5$.
 
 \begin{frame}\frametitle{Experiment 2}
 \begin{center}
-{\color{Maroon} \Large How does PG on optimality conditions and strict complementarity?}
+{\color{Maroon} \Large How does PG fare with optimality conditions and strict complementarity?}
 \end{center}
 \end{frame}
 
@@ -1053,44 +1053,60 @@ where $\epsilon > 0$ is a \emph{length scale} and $0 < \theta < 1$ is the desire
 \begin{frame}\frametitle{Latent Variable Proximal Point}
 {\Large
 {\color{Maroon}
-What is really going on here?
+What is really going on here? (beware: unpublished work follows)
 }
 }
 \end{frame}
 
-\begin{frame}\frametitle{A}
+\begin{frame}\frametitle{The LVPP Method}
+\begin{itemize}
+\item We seek a minimizer $\overline{u}$ of a smooth coercive functional $J$ over a closed convex subset $K$ of a Sobolev space $V$. \pause
+\item  We assume 
+\[
+K = \left\{v \in V \left| \Lambda v \in C \text{ a.e. } \Omega \right.\right\},
+\] 
+$\Omega$ is an open bounded set, $\Lambda$ is a bounded linear operator into $L^2(\Omega)^n$ or $L^2(\Omega)^{n\times n}$, and $C$ is a nonempty closed convex subset of $\mathbb R^n$ or $\mathbb R^{n \times n}$. \pause
+\item  LVPP contains two essential components: the \textbf{P}roximal \textbf{P}oint method\footnote{\tiny introduced by B. Martinet (1970).} and the introduction of a \textbf{L}atent \textbf{V}ariable $\psi$.
+\end{itemize}
+\end{frame}
 
-{\color{BlueViolet}\textbf{The LVPP Method:}} We seek a minimizer $\overline{u}$ of a smooth coercive functional $J$ over a closed convex subset $K$ of a Sobolev space $V$. We assume $K = \left\{v \in V \left| \Lambda v \in C \text{ a.e. } \Omega \right.\right\}$, $\Omega$ is an open bounded set, $\Lambda$ is a bounded linear operator into $L^2(\Omega)^n$ or $L^2(\Omega)^{n\times n}$, and $C$ is a nonempty closed convex subset of $\mathbb R^n$ or $\mathbb R^{n \times n}$. This enforces properties like non-negativity or boundedness of $\Lambda v$ almost everywhere on $\Omega$. 
-
-Just as most PDEs do not admit analytical solutions in general, we require a numerical algorithm to approximate $\overline{u}$. The ideal method would be provably convergent, accurate, and exhibit low iteration complexity. Here, \textit{accuracy} refers to an achievable tolerance and \textit{complexity} to the number of steps required until a stopping criterion is fulfilled at that tolerance.  These infinite-dimensional problems have the added challenge that $V$ must be replaced by a finite-dimensional space $V_h$ in practice. This adds another desirable property: \textit{mesh-independence}, i.e. the iteration complexity for a fixed accuracy is independent of the discretization parameter $h$. Mesh-independence is deeply linked to the properties of $V,J,K$, and $\overline{u}$ itself at the \emph{continuous level} \cite{MWeiser_etal_2005} and entails an intricate analysis for constrained problems \cite{Hintermller2004}. For this reason, many researchers design and analyze algorithms for the infinite-dimensional problem. This is our perspective, as well.
-
-As its name suggests, LVPP contains two essential components: The application of the classical \textbf{P}roximal \textbf{P}oint method introduced by Martinet \cite{BMartinet_1970}, though we follow the modern view from Teboulle et al., cf. \cite{MTeboulle_2018}, and the introduction of a \textbf{L}atent \textbf{V}ariable $\psi$. The latent variable is \textit{not} an approximation of a Lagrange multiplier. The generalized proximal point method for computing $\overline{u}$ is an iterative procedure that takes a penalty parameter $\alpha > 0$ and a previous iterate $v$ and returns a new approximation $u$ of $\overline{u}$  as the solution of the optimization problem: 
-$
+\begin{frame}\frametitle{The LVPP Method}
+\begin{itemize}
+\item The generalized proximal point method for computing $\overline{u}$ is an iterative procedure that takes a penalty parameter $\alpha > 0$ and a previous iterate $v$ and returns a new approximation $u$ of $\overline{u}$  as the solution of the optimization problem: 
+\[
 \min\{ J(u) + \alpha^{-1} D(\Lambda u,\Lambda v) : u \in K\}.
-$ 
-Here, $D$ is a Bregman distance, \cite{BREGMAN1967200},  which should capture the geometry of $C$ in a way that such subproblems can be considered \textit{unconstrained}. Bregman used a \textit{distance generating functional} $B$  to define $D$ as the local linearization error of $B$. Consequently, $u$ should solve the optimality system:
-$
+\] 
+\item \pause $D(u,v) = B(u) - B(v) - B'(v)(u - v)$ is a Bregman distance, $B$ captures the geometry of $C$ such that the subproblems can be considered \textit{unconstrained}.
+\item \pause Consequently, $u$ should solve the optimality system:
+\[
 \alpha J'(u) + \Lambda^* B'(\Lambda u) = \Lambda^* B'(\Lambda v).
-$
-This still contains a potential difficulty in the term $B'(\Lambda u)$ and it is here that we first introduce the \textit{latent variable} $\psi$, which we set to be $\psi := B'(\Lambda u)$.  
-
-\begin{wrapfigure}{R}{0.4\textwidth}
-\vspace{-3ex}
-%\includegraphics[width=\linewidth]{figures/lvpp-spp.png} 
-\caption{The LVPP nonlinear saddle point subproblem. Similar saddle point formulations are \textbf{not} available in interior point, quadratic penalty, or augmented Lagrangian approaches.}
-\label{fig:lvpp-spp}
-\end{wrapfigure}
-
-Similar to other algorithms that use a quadratic penalty term to relax $\Lambda u \in C$, $B$ should also be an integral functional so that $B'$ is a structured superposition (Nemitskii) operator, i.e. $[B'(y)](x) = \nabla f(y(x))$ for some real-valued mapping $f$.  The key here is to let $f$ be a \textit{Legendre} function whose domain \textit{coincides} with $C$. This unique property is not present in interior point, quadratic penalty, or augmented Lagrangian approaches. Introduced by Rockafellar in \cite{RTRockafellar_1970}, Legendre functions constitute a special class of convex functions that have the decisive property of $\nabla f$ forming a bijection from $\mathrm{int\, dom\,} f$ to $\mathrm{int\, dom\,} f^*$, where $f^*$ is the Fenchel conjugate of $f$, i.e. $(\nabla f)^{-1} = \nabla f^*$, where it is defined. This leads to the special nonlinear saddle point formulation in \Cref{fig:lvpp-spp}. I propose to call the unique superposition operators generated in this way \textit{Legendre-Nemitskii} operators. In \Cref{fig:lvpp-transform-table}, I formally compute the components that would arise for various sets $K$ and Legendre-Nemitskii operators.  After discretization, the solution $(\overline{u}_h,\overline{\psi}_{h})$ actually provides an additional (latent) solution: $\nabla f^*(\overline{\psi}_h)$, which by nature is always contained in $C$. This \textit{guarantees} a \textit{globally feasible discrete} approximation of $\Lambda \overline{u}$.
-
-\begin{figure}[h]
-%\includegraphics[width=\linewidth]{figures/lvpp-transform-table.png} 
-\caption{Three examples of the versatility of Legendre-Nemitskii operators. $K$ is the original feasible set. $f$ is the finite-dimensional Legendre function. $\Lambda$ is the bounded linear operator in the composition. $\Lambda^* \psi$ is the derivative term after introducing the latent variable $\psi$ and $\Lambda u = \nabla f^*(\psi)$ is the nonlinear equation in the mixed formulation.}
-\label{fig:lvpp-transform-table}
-\end{figure}
-By developing a specially tailored mixed finite element method to solve the LVPP saddle point subproblems, Brendan Keith and I introduced the Proximal Galerkin method mentioned earlier. Given the versatility of examples in \Cref{fig:lvpp-transform-table}, I strongly believe that the approach of combining LVPP with mixed finite element methods should be considered the canonical method for solving constrained variational problems with these and related structures.\medskip
-
+\]
+\item \pause This still contains a potential difficulty in the term $B'(\Lambda u)$ and it is here that we first introduce the \textit{latent variable} $\psi$, which we set to be $\psi := B'(\Lambda u)$.  
+\end{itemize}
 \end{frame}
+
+\begin{frame}\frametitle{Legendre-Nemitskii Operators}
+\begin{itemize}
+\item $B$ should also be an integral functional so that $B'$ is a structured superposition (Nemitskii) operator, i.e. $[B'(y)](x) = \nabla f(y(x))$ for some real-valued mapping $f$. \pause
+\item Key point: $f$ should be a \textit{Legendre} function\footnote{\tiny Rockafellar (1970)} whose domain \textit{coincides} with $C$. \pause
+\item Key property: $\nabla f$ forms a bijection from $\mathrm{int\, dom\,} f$ to $\mathrm{int\, dom\,} f^*$, where $f^*$ is the Fenchel conjugate of $f$, i.e. $(\nabla f)^{-1} = \nabla f^*$, where it is defined.\pause
+\item I propose we call such operators $B'$ \textbf{Legendre-Nemitskii operators}.
+\end{itemize}\pause
+\begin{figure}[h]
+\includegraphics[width=0.85\linewidth]{Figures/lvpp-transform-table.png} 
+\end{figure}
+\end{frame}
+
+\begin{frame}\frametitle{LVPP-Saddle Point Problem}
+\begin{figure}[h]
+\includegraphics[width=0.5\textwidth, keepaspectratio]{Figures/lvpp-spp.png}
+\caption{The LVPP nonlinear saddle point subproblem. Similar saddle point formulations are \textbf{not} available in interior point, quadratic penalty, or augmented Lagrangian approaches.}
+\end{figure}
+\begin{center}
+ After discretization, the solution $(\overline{u}_h,\overline{\psi}_{h})$ provides a latent solution: $\nabla f^*(\overline{\psi}_h)$, which is always in $C$. This \textit{guarantees} a \textit{globally feasible discrete} approximation of $\Lambda \overline{u}$. \\ \textbf{This is what is going on at the core of the Proximal Galerkin method!}
+\end{center}
+\end{frame}
+
 \end{document}
 
 

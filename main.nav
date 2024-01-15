@@ -80,10 +80,16 @@
 \headcommand {\sectionentry {4}{The Latent Variable Proximal Point Method}{48}{The Latent Variable Proximal Point Method}{0}}
 \headcommand {\slideentry {4}{0}{1}{48/48}{}{0}}
 \headcommand {\beamer@framepages {48}{48}}
-\headcommand {\slideentry {4}{0}{2}{49/49}{}{0}}
-\headcommand {\beamer@framepages {49}{49}}
-\headcommand {\beamer@partpages {1}{49}}
-\headcommand {\beamer@subsectionpages {48}{49}}
-\headcommand {\beamer@sectionpages {48}{49}}
-\headcommand {\beamer@documentpages {49}}
-\headcommand {\gdef \inserttotalframenumber {36}}
+\headcommand {\slideentry {4}{0}{2}{49/51}{}{0}}
+\headcommand {\beamer@framepages {49}{51}}
+\headcommand {\slideentry {4}{0}{3}{52/55}{}{0}}
+\headcommand {\beamer@framepages {52}{55}}
+\headcommand {\slideentry {4}{0}{4}{56/60}{}{0}}
+\headcommand {\beamer@framepages {56}{60}}
+\headcommand {\slideentry {4}{0}{5}{61/61}{}{0}}
+\headcommand {\beamer@framepages {61}{61}}
+\headcommand {\beamer@partpages {1}{61}}
+\headcommand {\beamer@subsectionpages {48}{61}}
+\headcommand {\beamer@sectionpages {48}{61}}
+\headcommand {\beamer@documentpages {61}}
+\headcommand {\gdef \inserttotalframenumber {39}}
