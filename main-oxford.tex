@@ -85,12 +85,12 @@ Oxford, 2 April 2025}
 
 \begin{document}
 
-\begin{frame}
-\setbeamertemplate{footline}{}
+\begin{frame}[plain]
+%\setbeamertemplate{footline}{}
 \titlepage
 \end{frame}
 
-\setbeamertemplate{footline}[frame number]
+%\setbeamertemplate{footline}[frame number]
 
 \begin{frame}{Overview}
 \tableofcontents
@@ -221,7 +221,7 @@ The Lagrange multiplier $\lambda$ has low regularity.
 \item An idea from convex optimization: the proximal point method.\footnote{\tiny Introduced by B. Martinet (1970). Based on a proof idea in Lions \& Stampacchia (1967). See also Bregman (1967), Nemirovsky \& Yudin (1983)}
 \item \visible<2->{Given $\alpha > 0$ and previous iterate $v$, find $u^{*} \in K$ that minimizes 
 \[
-\underbrace{E(u)}_{\text{Objective}} + \underbrace{\frac{1}{\alpha} \int_{\Omega} u \ln\left(\frac{u}{v}\right) - (u + v) \, \mathrm{d}x}_{\text{Bregman divergence using Shannon entropy}} \text{ over } K. 
+\underbrace{E(u)}_{\text{Objective}} + \underbrace{\frac{1}{\alpha} \int_{\Omega} u \ln\left(\frac{u}{v}\right) - (u + v) \, \mathrm{d}x}_{\text{Bregman distance induced by Shannon entropy}} \text{ over } K. 
 \]
 }\vspace{-2ex}
 \item \visible<3->{The optimality conditions for this problem (after a rather fine analysis) become 
@@ -856,29 +856,87 @@ What is really going on here? %(beware: incoming hand-waving)
 \end{frame}
 
 \begin{frame}\frametitle{The LVPP Method}
-\begin{itemize}
-\item We seek a minimizer $\overline{u}$ of a smooth coercive functional $J$ over a closed convex subset $K$ of a Sobolev space $V$. \pause
-\item  We assume 
+\only<1>{Abstractly speaking, we began with the optimization problem:}
+\only<2>{The optimality conditions provide us with a variational inequality:}
+\only<3>{Since the variational inequality does not reduce to a variational equation:}
 \[
-K = \left\{v \in V \left| \Lambda v \in C \text{ a.e. } \Omega \right.\right\},
-\] 
-$\Omega$ is an open bounded set, $\Lambda$ is a bounded linear operator into $L^2(\Omega)^n$ or $L^2(\Omega)^{n\times n}$, and $C$ is a nonempty closed convex subset of $\mathbb R^n$ or $\mathbb R^{n \times n}$. \pause
-\item  LVPP contains two essential components: the \textbf{P}roximal \textbf{P}oint method\footnote{\tiny introduced by B. Martinet (1970). Based on a proof technique by Lions \& Stampacchia (1967).} and the introduction of a \textbf{L}atent \textbf{V}ariable $\psi$.
+\only<1>{ \min_{u \in K} J(u)}
+\only<2>{ \min_{u \in K} J(u) \quad \rightarrow \quad \text{Find } u \in K : J'(u)(v - u) \ge 0,\; \forall v \in K.}
+\only<3>{\text{ Solve }\quad \min_{u \in K} J(u) \quad \text{ by iteratively solving }  \quad \min_{u \in K} J(u) + \alpha^{-1} D(u,u_{\text{old}}) \quad \text{instead.}}
+\]
+\only<1,2>{
+\begin{itemize}
+\item $V$: a reflexive Banach space,
+\item $K \subset V$: a closed convex set,
+%\[
+%K = \left\{v \in V \left| B v \in C \text{ a.e. } \Omega \right.\right\},
+%\]
+\item $J$: a smooth coercive functional.
 \end{itemize}
+}
+\only<3->{
+\begin{itemize}
+\item $V$: a reflexive Banach space,
+\item $K \subset V$: a closed convex set,
+%$
+%K = \left\{v \in V \left| B v \in C \text{ a.e. } \Omega \right.\right\}
+%$
+\item $J$: a smooth coercive functional
+and $D : K \times K \to \overline{\mathbb R}$ is a \alert{Bregman distance.}
+\end{itemize}
+}
+
+%\begin{itemize}
+%\item Abstract optimization
+%\item Abstract BPP
+%\item Abstract Optimality
+%\item Abstract LVPP
+%\end{itemize}
+
+
+%\begin{itemize}
+%\item We seek a minimizer $\overline{u}$ of a smooth coercive functional $J$ over a closed convex subset $K$ of a Sobolev space $V$. \pause
+%\item  We assume 
+%\[
+%K = \left\{v \in V \left| \Lambda v \in C \text{ a.e. } \Omega \right.\right\},
+%\] 
+%$\Omega$ is an open bounded set, $\Lambda$ is a bounded linear operator into $L^2(\Omega)^n$ or $L^2(\Omega)^{n\times n}$, and $C$ is a nonempty closed convex subset of $\mathbb R^n$ or $\mathbb R^{n \times n}$. \pause
+%\item  LVPP contains two essential components: the \textbf{P}roximal \textbf{P}oint method\footnote{\tiny introduced by B. Martinet (1970). Based on a proof technique by Lions \& Stampacchia (1967).} and the introduction of a \textbf{L}atent \textbf{V}ariable $\psi$.
+%\end{itemize}
 \end{frame}
 
 \begin{frame}\frametitle{The LVPP Method}
 \begin{itemize}
-\item The generalized proximal point method for computing $\overline{u}$ is an iterative procedure that takes a penalty parameter $\alpha > 0$ and a previous iterate $v$ and returns a new approximation $u$ of $\overline{u}$  as the solution of the optimization problem: 
-\[
-\min\{ J(u) + \alpha^{-1} D(\Lambda u,\Lambda v) : u \in K\}.
-\] 
-\item \pause $D(u,v) = B(u) - B(v) - B'(v)(u - v)$ is a Bregman distance, $B$ captures the geometry of $C$ such that the subproblems can be considered \textit{unconstrained}.
-\item \pause Consequently, $u$ should solve the optimality system:
+\item Bregman distances are induced by a \textbf{distance-generating function} $R$.
+\item They measure the linearization error of $R$ at any given point in its domain:
+\begin{equation*}
+%\label{eq:BregmanDivergence}
+D_R(a, b) := R(a) - R(b) - \nabla R(b) \cdot (a-b)\,, \quad a \in \text{$\mathop{\text{dom}} R$}\,,~b \in \text{$\mathop{\text{int}} \mathop{\text{dom}} R$}.
+\end{equation*}
+\item They becomes very \alert{useful} when the \alert{geometry} of $K$ can be \alert{encoded in $\mathop{\text{dom}} R$}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{The LVPP Method}
+More specifically:
+\begin{itemize}
+\item $\Omega \subset \mathbb{R}^n$:  Lipschitz domains
+\item $K$ is defined by
+\begin{equation} \label{eq:intro:feasible_set}
+K = \{ v \in V \mid Bv(x) \in C(x) \text{ for almost every } x \in \Omega_d \subset \overline{\Omega} \}.
+\end{equation}
+where
+\item $\Omega_d\subset \overline{\Omega}$, Hausdorff measurable, $d \le n$,
+\item $V \subset L^1(\Omega)$ is a Banach space on $\Omega$, 
+\item $B \colon V \to L^1(\Omega_d)$ is a bounded linear operator on $V$ such that $(Bv)(x) \subset C(x) \subset \mathbb{R}^m$ a closed convex set.
+\item 
+
+\item  $D(u,v) = B(u) - B(v) - B'(v)(u - v)$ is a Bregman distance, $B$ captures the geometry of $C$ such that the subproblems can be considered \textit{unconstrained}.
+\item  Consequently, $u$ should solve the optimality system:
 \[
 \alpha J'(u) + \Lambda^* B'(\Lambda u) = \Lambda^* B'(\Lambda v).
 \]
-\item \pause This still contains a potential difficulty in the term $B'(\Lambda u)$.
+\item  This still contains a potential difficulty in the term $B'(\Lambda u)$.
 \end{itemize}
 \end{frame}
 
@@ -1063,124 +1121,124 @@ But does it actually work?
 
 
 %\subsection{Monge-Amp\'ere}
-\begin{frame}\frametitle{Convexity Constraints}
-\begin{itemize}
-\item For  $\Omega \subset \mathbb R^n$ open convex, we want sufficiently smooth $u: \Omega \to \mathbb R$ such that
-\begin{equation*}
-    \nabla^2 u \succeq 0 \text{ a.e. } \Omega, \quad \text{ ( $\nabla^2 u$ pos. semidef.) }
-    \,
-\end{equation*}
-\item \pause Very difficult to treat numerically. 
-\item \pause {\color{Red}Why not introduce a (symmetric matrix-valued) latent variable and exponential map?}\\ \pause Find $(u,\psi)$ such that
-\[
-   \nabla^2 u = \exp \psi,
-\]
-where $\psi$ is the matrix exponential function.\footnote{\scriptsize Bernstein \& So (1993), Cheng \& Yau (1997) provide explicit formulae for matrix exponential in
-	$\mathbb R^{2 \times 2}$ \&  $\mathbb R^{3 \times 3}$.}
-\item \pause Note that $\operatorname{det} (\nabla^2 u) = \operatorname{det}(\exp \psi) = \exp( \operatorname{tr} \psi )$
-\item {\color{Red} What if we restrict the possible latent variables such that $\operatorname{tr} \psi = $ ``something''}
-%\item \pause Note $\operatorname{det}(\exp \psi) = \exp( \operatorname{tr} \psi )$. So if $ \operatorname{tr} \psi = 1$ (for example) the we arrive at
+%\begin{frame}\frametitle{Convexity Constraints}
+%\begin{itemize}
+%\item For  $\Omega \subset \mathbb R^n$ open convex, we want sufficiently smooth $u: \Omega \to \mathbb R$ such that
+%\begin{equation*}
+%    \nabla^2 u \succeq 0 \text{ a.e. } \Omega, \quad \text{ ( $\nabla^2 u$ pos. semidef.) }
+%    \,
+%\end{equation*}
+%\item \pause Very difficult to treat numerically. 
+%\item \pause {\color{Red}Why not introduce a (symmetric matrix-valued) latent variable and exponential map?}\\ \pause Find $(u,\psi)$ such that
+%\[
+%   \nabla^2 u = \exp \psi,
+%\]
+%where $\psi$ is the matrix exponential function.\footnote{\scriptsize Bernstein \& So (1993), Cheng \& Yau (1997) provide explicit formulae for matrix exponential in
+%	$\mathbb R^{2 \times 2}$ \&  $\mathbb R^{3 \times 3}$.}
+%\item \pause Note that $\operatorname{det} (\nabla^2 u) = \operatorname{det}(\exp \psi) = \exp( \operatorname{tr} \psi )$
+%\item {\color{Red} What if we restrict the possible latent variables such that $\operatorname{tr} \psi = $ ``something''}
+%%\item \pause Note $\operatorname{det}(\exp \psi) = \exp( \operatorname{tr} \psi )$. So if $ \operatorname{tr} \psi = 1$ (for example) the we arrive at
+%%\[
+%%\aligned
+%%  \nabla^2 u &= \exp \psi,\\
+%%  \operatorname{tr} \psi &= 1
+%%\endaligned
+%%\]
+%\end{itemize}
+%\end{frame}
+
+%\begin{frame}\frametitle{Optimal Transport}
+%\begin{itemize}
+%\item The latent-variable reformulation of convexity constraints can be taken a step further!
+%\item \pause Let $\mu$, $\nu$ admit smooth, positive, bounded Lebesgue densities $\rho$, $g$:
 %\[
 %\aligned
-%  \nabla^2 u &= \exp \psi,\\
-%  \operatorname{tr} \psi &= 1
+%\mathrm{d}\mu(x) &= \rho(x) \mathrm{d}x,\\
+%d\nu(y) &= g(y) \mathrm{d}y.
 %\endaligned
 %\]
-\end{itemize}
-\end{frame}
-
-\begin{frame}\frametitle{Optimal Transport}
-\begin{itemize}
-\item The latent-variable reformulation of convexity constraints can be taken a step further!
-\item \pause Let $\mu$, $\nu$ admit smooth, positive, bounded Lebesgue densities $\rho$, $g$:
-\[
-\aligned
-\mathrm{d}\mu(x) &= \rho(x) \mathrm{d}x,\\
-d\nu(y) &= g(y) \mathrm{d}y.
-\endaligned
-\]
-\item \pause Find a mapping $T$ such that $T_{\#} \mu = \nu$ in an optimal way, e.g. measuring cost via the Euclidean distance.
-\item \pause This is all closely related to the solution of ($\nabla^2 u$)
-\[
-     \operatorname{det}(\nabla^2 u) = \frac{\rho}{g(\nabla u)},
-\]
-the Monge-Amp\`ere equation. Where $T = \nabla u$ would be an optimal transport map.
-%\item \pause Then given a sufficiently smooth $u$, $\mathop{\mathrm{tr}} \psi = \ln \rho - \ln g(\nabla u)$ would imply
+%\item \pause Find a mapping $T$ such that $T_{\#} \mu = \nu$ in an optimal way, e.g. measuring cost via the Euclidean distance.
+%\item \pause This is all closely related to the solution of ($\nabla^2 u$)
 %\[
-%\exp( \operatorname{tr} \psi ) = \frac{\rho}{g(\nabla u)}
+%     \operatorname{det}(\nabla^2 u) = \frac{\rho}{g(\nabla u)},
 %\]
+%the Monge-Amp\`ere equation. Where $T = \nabla u$ would be an optimal transport map.
+%%\item \pause Then given a sufficiently smooth $u$, $\mathop{\mathrm{tr}} \psi = \ln \rho - \ln g(\nabla u)$ would imply
+%%\[
+%%\exp( \operatorname{tr} \psi ) = \frac{\rho}{g(\nabla u)}
+%%\]
+%
+%% and $d\nu(y) = g(y) \mathrm{d}y$
+%%\item This mixed formulation can be taken one step further if we recall the connection between Monge-Amp\`ere and optimal transport, in which we seek to find an optimal transport map $T = \nabla u$ that takes the measure $\mu$ into $\nu$ via the formula $\nu(A) = \mu(T^{-1}(A))$. For this setting, we are measuring the cost of transportation using the squared Euclidean distance. If $\mu$, $\nu$ admit sufficiently smooth, uniformly positive, bounded Lebesgue densities, i.e., we have $\mathrm{d}\mu(x) = \rho(x) \mathrm{d}x$ to $d\nu(y) = g(y) \mathrm{d}y$, then $\rho$ in \eqref{eq:monge-amp} is replaced by $\rho/g(\nabla u)$. We can accomodate this fact in \eqref{eq:convex-trace} by including the nonlinear term $\ln(g(\nabla u))$:
+%%\[
+%%\mathop{\mathrm{tr}} \psi = \ln \rho - \ln g(\nabla u).
+%%\]
+%\end{itemize}
+%\end{frame}
 
-% and $d\nu(y) = g(y) \mathrm{d}y$
-%\item This mixed formulation can be taken one step further if we recall the connection between Monge-Amp\`ere and optimal transport, in which we seek to find an optimal transport map $T = \nabla u$ that takes the measure $\mu$ into $\nu$ via the formula $\nu(A) = \mu(T^{-1}(A))$. For this setting, we are measuring the cost of transportation using the squared Euclidean distance. If $\mu$, $\nu$ admit sufficiently smooth, uniformly positive, bounded Lebesgue densities, i.e., we have $\mathrm{d}\mu(x) = \rho(x) \mathrm{d}x$ to $d\nu(y) = g(y) \mathrm{d}y$, then $\rho$ in \eqref{eq:monge-amp} is replaced by $\rho/g(\nabla u)$. We can accomodate this fact in \eqref{eq:convex-trace} by including the nonlinear term $\ln(g(\nabla u))$:
+%\begin{frame}\frametitle{Latent Variable Monge-Amp\`ere}
+%\begin{itemize}
+%\item Putting this together, we see that any (sufficiently regular) $(u,\psi)$ satisfying 
 %\[
-%\mathop{\mathrm{tr}} \psi = \ln \rho - \ln g(\nabla u).
+%\aligned
+%\nabla^2 u &= \exp \psi\,\\
+%\mathop{\mathrm{tr}} \psi &= \ln \rho - \ln g(\nabla u),\\
+%\endaligned
+%\] \pause
+%would necessarily give us a type of solution to the Monge-Amp\`ere equation
+%\[
+%     \operatorname{det}(\nabla^2 u) = \frac{\rho}{g(\nabla u)}
 %\]
-\end{itemize}
-\end{frame}
+%and $T = \nabla u$ would be an optimal transport map for pushing $\mu$ forward onto $\nu$.
+%\end{itemize}
+%\end{frame}
 
-\begin{frame}\frametitle{Latent Variable Monge-Amp\`ere}
-\begin{itemize}
-\item Putting this together, we see that any (sufficiently regular) $(u,\psi)$ satisfying 
-\[
-\aligned
-\nabla^2 u &= \exp \psi\,\\
-\mathop{\mathrm{tr}} \psi &= \ln \rho - \ln g(\nabla u),\\
-\endaligned
-\] \pause
-would necessarily give us a type of solution to the Monge-Amp\`ere equation
-\[
-     \operatorname{det}(\nabla^2 u) = \frac{\rho}{g(\nabla u)}
-\]
-and $T = \nabla u$ would be an optimal transport map for pushing $\mu$ forward onto $\nu$.
-\end{itemize}
-\end{frame}
+%\begin{frame}\frametitle{Latent Variable Monge-Amp\`ere}
+%\begin{itemize}
+%\item A weak formulation (using $g \equiv 1$)
+%\[
+%\aligned
+%(\exp \psi, v) + (\nabla u, \operatorname{div} v) + (\operatorname{tr} \psi, w) = (\ln \rho, w) 
+%\endaligned
+%\]
+%\item We consider $u$ to be in $V_h := \mathbb P_{p}(\mathcal{T}_h) \cap C(\overline{\Omega})$ and $\psi$ in $W_h := (\mathbb R \mathbb T_{p})^2$.
+%\item {\color{Red} Work in progress...}
+%\end{itemize}
+%\end{frame}
 
-\begin{frame}\frametitle{Latent Variable Monge-Amp\`ere}
-\begin{itemize}
-\item A weak formulation (using $g \equiv 1$)
-\[
-\aligned
-(\exp \psi, v) + (\nabla u, \operatorname{div} v) + (\operatorname{tr} \psi, w) = (\ln \rho, w) 
-\endaligned
-\]
-\item We consider $u$ to be in $V_h := \mathbb P_{p}(\mathcal{T}_h) \cap C(\overline{\Omega})$ and $\psi$ in $W_h := (\mathbb R \mathbb T_{p})^2$.
-\item {\color{Red} Work in progress...}
-\end{itemize}
-\end{frame}
+%\begin{frame}\frametitle{Monge-Amp\`ere}
+%{\Large
+%{\color{Maroon}
+%But does it actually work?
+%}
+%}
+%\end{frame}
 
-\begin{frame}\frametitle{Monge-Amp\`ere}
-{\Large
-{\color{Maroon}
-But does it actually work?
-}
-}
-\end{frame}
-
-\begin{frame}\frametitle{2D Monge-Amp\`ere}
-\begin{figure}
-	\centering
-	\begin{minipage}{0.3\textwidth}
-		\centering
-		\includegraphics[height=4cm, width=\textwidth, keepaspectratio]{Figures/monge-ampere-solution.png}
-		\\
-	\end{minipage}%,
-	\
-	\begin{minipage}{0.6\textwidth}
-	\begin{itemize}
-	\item From 121 to 24961 DOFs:  5 to 8 Newton steps.
-	\item Observed local quadratic convergence 
-	\item Final ($L^2$) errors
-	\[
-	 0.11743, 0.02140, 0.00329, 0.00058, 0.00013
-	\]
-	\item $L^2$ convergence rates
-	\[
-	2.4563, 2.7030, 2.5023, 2.2176
-	\]
-	\item {\color{Red} Still WIP, but pretty convincing so far}
-	\end{itemize}
-	\end{minipage}%
-	~~~
+%\begin{frame}\frametitle{2D Monge-Amp\`ere}
+%\begin{figure}
+%	\centering
+%	\begin{minipage}{0.3\textwidth}
+%		\centering
+%		\includegraphics[height=4cm, width=\textwidth, keepaspectratio]{Figures/monge-ampere-solution.png}
+%		\\
+%	\end{minipage}%,
+%	\
+%	\begin{minipage}{0.6\textwidth}
+%	\begin{itemize}
+%	\item From 121 to 24961 DOFs:  5 to 8 Newton steps.
+%	\item Observed local quadratic convergence 
+%	\item Final ($L^2$) errors
+%	\[
+%	 0.11743, 0.02140, 0.00329, 0.00058, 0.00013
+%	\]
+%	\item $L^2$ convergence rates
+%	\[
+%	2.4563, 2.7030, 2.5023, 2.2176
+%	\]
+%	\item {\color{Red} Still WIP, but pretty convincing so far}
+%	\end{itemize}
+%	\end{minipage}%
+%	~~~
 %	\caption{
 %	\label{fig:monge-ampere}
 %	}
@@ -1229,8 +1287,8 @@ But does it actually work?
 %   8 SNES Function norm 1.355553159695e-08
 %Errors:  [0.11743707316059077, 0.021397971641314243, 0.0032862218773048496, 0.0005800177797029322, 0.00012470641099309474]
 %Convergence orders:  [2.45634197 2.70297225 2.50226086 2.21756149]
-\end{figure}
-\end{frame}
+%\end{figure}
+%\end{frame}
 
 
 
