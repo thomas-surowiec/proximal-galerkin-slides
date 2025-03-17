@@ -19,6 +19,7 @@
 \usepackage{appendixnumberbeamer}
 \usepackage{wrapfig}
 \usepackage{verbatim}
+\usepackage{tcolorbox}
 %\usepackage[dvipsnames]{xcolor}
 
 \usepackage{hhline}
@@ -67,7 +68,7 @@
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
 
-\title[]{The latent variable proximal point method for variational problems with inequality constraints.
+\title[]{The latent variable proximal point algorithm for variational problems with inequality constraints.
  } % The short title appears at the bottom of every slide, the full title is only on the title page
 %\subtitle{Subtitle}
 
@@ -114,19 +115,114 @@ Oxford, 2 April 2025}
 \end{frame}
 
 \section{Motivation and Background}
-\begin{frame}\frametitle{Dirichlet's Principle\footnote{\tiny  Due to William Thomson, 1st Lord Kelvin 1847 \& Gau\ss. Named after  Dirichlet by Riemann. Hilbert provided rigorous existence proof in  1900.}}
+%\begin{frame}\frametitle{Dirichlet's Principle\footnote{\tiny  Due to William Thomson, 1st Lord Kelvin 1847 \& Gau\ss. Named after  Dirichlet by Riemann. Hilbert provided rigorous existence proof in  1900.}}
+%
+% In contemporary language: for any $f\in L^2(\Omega)$ and $g\in H^1(\Omega)$, the (weak) solution of Poisson's equation over a Lipschitz domain $\Omega \subset \mathbb{R}^n$,
+%\begin{equation}
+%\label{eq:PoissonEquation}
+%	-\Delta u = f
+%	\quad \text{in~} \Omega,
+%	\qquad
+%	u = g \quad \text{on~} \partial\Omega,
+%\end{equation}\visible<2->{
+%is the \textbf{$H^1(\Omega)$-minimizer} of the Dirichlet energy,
+%\begin{equation}
+%\label{eq:DirichletEnergy}
+%	E(v)
+%	=
+%	\frac{1}{2}
+%	\int_\Omega |\nabla v|^2 \dd x
+%	-
+%	\int_\Omega v f \dd x
+%	\,,
+%\end{equation}
+%when confined to the \textbf{constraint set} $H^1_g(\Omega) = g + H^1_0(\Omega) = \{ v \in H^1(\Omega) \mid v = g \text{~on~} \partial \Omega\}$.}
+%
+%\end{frame}
 
- In contemporary language: for any $f\in L^2(\Omega)$ and $g\in H^1(\Omega)$, the (weak) solution of Poisson's equation over a Lipschitz domain $\Omega \subset \mathbb{R}^n$,
-\begin{equation}
-\label{eq:PoissonEquation}
-	-\Delta u = f
-	\quad \text{in~} \Omega,
-	\qquad
-	u = g \quad \text{on~} \partial\Omega,
-\end{equation}\visible<2->{
-is the \textbf{$H^1(\Omega)$-minimizer} of the Dirichlet energy,
-\begin{equation}
-\label{eq:DirichletEnergy}
+%\begin{frame}\frametitle{A Variational Inequality}
+%\begin{itemize}
+%\item The  feasible set $H^1_g(\Omega)$ is nonempty, closed, and convex, but not a vector space. 
+%\item \visible<2->{
+%The Lions--Stampacchia theorem (1967) states that the minimizer $u^\ast \in K = H^1_g(\Omega)$ is the unique solution to a variational inequality (VI)
+%\begin{equation*}
+%%\label{eq:DirichletVI}
+%	\int_\Omega \nabla u^\ast \cdot \nabla (v - u^*)  \dd x \geq \int_\Omega f (v - u^*) \dd x
+%	~\fa v \in K.
+%	% \int_\Omega (\nabla v - \nabla u) \cdot \nabla u \dd x \geq \int_\Omega (v-u) f \dd x
+%	% ~\fa v \in K.
+%\end{equation*}
+%}
+%\end{itemize}
+%\visible<3->{
+%\begin{center}\textit{
+%But no one solves Poisson's problem \eqref{eq:PoissonEquation} as a variational inequality. Why not?}
+%\end{center}
+%}
+%\end{frame}
+
+%\begin{frame}\frametitle{Back to the Dirichlet's Principle}
+%\begin{itemize}
+%\item $K = H^1_g(\Omega)$ is affine and for all $w \in H^1_0(\Omega)$ and $v \in H^1_g(\Omega)$, $v + w \in H^1_g(\Omega)$, as well. \pause
+%\item Taking $v = u^\ast\pm w$ for any $w \in H^1_0(\Omega)$ here
+%\begin{equation*}
+%	\int_\Omega \nabla u^\ast \cdot \nabla (v-u^*)  \dd x \geq \int_\Omega f (v - u^*) \dd x
+%	~\fa v \in K,
+%	% \int_\Omega (\nabla v - \nabla u) \cdot \nabla u \dd x \geq \int_\Omega (v-u) f \dd x
+%	% ~\fa v \in K.
+%\end{equation*}
+%brings us back to Dirichlet's principle: Find $u^* \in H^1_g(\Omega)$ such that
+%\begin{equation*}
+%	\int_\Omega \nabla u^\ast \cdot \nabla w \dd x = \int_\Omega f w \dd x
+%	~\fa w \in H^1_0(\Omega).
+%\end{equation*}
+%\end{itemize}\pause
+%\begin{center}\textit{
+% We use the explicit \textit{geometry} of the feasible set to derive a simpler problem.
+% }
+% \end{center}
+%\end{frame}
+
+%\begin{frame}\frametitle{The Obstacle Problem\footnote{\tiny Introduced by G.\ Stampacchia around 1963. Variational inequalities proposed by A. Signorini (1959) and studied by G. Fichera (1963) and onwards.}}
+%%\begin{itemize}
+%%\item 
+%We seek an  \textbf{$H^1(\Omega)$-minimizer} $u$ of the Dirichlet energy:
+%\begin{equation*}
+%%\label{eq:DirichletEnergy}
+%	E(v)
+%	=
+%	\frac{1}{2}
+%	\int_\Omega |\nabla v|^2 \dd x
+%	-
+%	\int_\Omega v f \dd x
+%	\,,
+%\end{equation*}
+%over the \textbf{closed convex cone} defined by  
+%\[
+%K = \{ v \in H^1_0(\Omega) \mid v \geq 0 \text{~a.e.}\}% = H^1_0(\Omega) \cap H^1_+(\Omega).
+%\] 
+%%\item 
+%\visible<2->{This can be reformulated as a \textbf{variational inequality}:
+%\begin{equation*}%\label{eq:obs_vi}
+%       \text{Find } u \in K : 
+%	\int_\Omega \nabla u \cdot \nabla (v-u)  \dd x \geq \int_\Omega f (v - u) \dd x
+%	~\fa v \in K.
+%	% \int_\Omega (\nabla v - \nabla u) \cdot \nabla u \dd x \geq \int_\Omega (v-u) f \dd x
+%	% ~\fa v \in K.
+%\end{equation*}
+%}
+%%\vspace{-2ex}
+%%\item 
+%\visible<3->{This cannot be rewritten as \textbf{variational equation}.}\vspace{1ex}
+%%\end{itemize}
+%\end{frame}
+
+\begin{frame}\frametitle{The Obstacle Problem\footnote{\tiny Introduced by G.\ Stampacchia around 1963. Variational inequalities proposed by A. Signorini (1959) and studied by G. Fichera (1963) and onwards.}}
+\visible<2->{
+  \begin{minipage}{0.48\textwidth}
+  \begin{beamercolorbox}[rounded=true, shadow=true, wd=\textwidth]{block title}
+We seek an  \textbf{$H^1(\Omega)$-minimizer} $u$ of the Dirichlet energy:
+\begin{equation*}
 	E(v)
 	=
 	\frac{1}{2}
@@ -134,70 +230,26 @@ is the \textbf{$H^1(\Omega)$-minimizer} of the Dirichlet energy,
 	-
 	\int_\Omega v f \dd x
 	\,,
-\end{equation}
-when confined to the \textbf{constraint set} $H^1_g(\Omega) = g + H^1_0(\Omega) = \{ v \in H^1(\Omega) \mid v = g \text{~on~} \partial \Omega\}$.}
-
-\end{frame}
-
-\begin{frame}\frametitle{A Variational Inequality}
-\begin{itemize}
-\item The  feasible set $H^1_g(\Omega)$ is nonempty, closed, and convex, but not a vector space. 
-\item \visible<2->{
-The Lions--Stampacchia theorem (1967) states that the minimizer $u^\ast \in K = H^1_g(\Omega)$ is the unique solution to a variational inequality (VI)
-\begin{equation*}
-%\label{eq:DirichletVI}
-	\int_\Omega \nabla u^\ast \cdot \nabla (v - u^*)  \dd x \geq \int_\Omega f (v - u^*) \dd x
-	~\fa v \in K.
-	% \int_\Omega (\nabla v - \nabla u) \cdot \nabla u \dd x \geq \int_\Omega (v-u) f \dd x
-	% ~\fa v \in K.
 \end{equation*}
-}
-\end{itemize}
-\visible<3->{
-\begin{center}\textit{
-But no one solves Poisson's problem \eqref{eq:PoissonEquation} as a variational inequality. Why not?}
-\end{center}
-}
-\end{frame}
-
-\begin{frame}\frametitle{Back to the Dirichlet's Principle}
-\begin{itemize}
-\item $K = H^1_g(\Omega)$ is affine and for all $w \in H^1_0(\Omega)$ and $v \in H^1_g(\Omega)$, $v + w \in H^1_g(\Omega)$, as well. \pause
-\item Taking $v = u^\ast\pm w$ for any $w \in H^1_0(\Omega)$ here
-\begin{equation*}
-	\int_\Omega \nabla u^\ast \cdot \nabla (v-u^*)  \dd x \geq \int_\Omega f (v - u^*) \dd x
-	~\fa v \in K,
-	% \int_\Omega (\nabla v - \nabla u) \cdot \nabla u \dd x \geq \int_\Omega (v-u) f \dd x
-	% ~\fa v \in K.
-\end{equation*}
-brings us back to Dirichlet's principle: Find $u^* \in H^1_g(\Omega)$ such that
-\begin{equation*}
-	\int_\Omega \nabla u^\ast \cdot \nabla w \dd x = \int_\Omega f w \dd x
-	~\fa w \in H^1_0(\Omega).
-\end{equation*}
-\end{itemize}\pause
-\begin{center}\textit{
- We use the explicit \textit{geometry} of the feasible set to derive a simpler problem.
- }
- \end{center}
-\end{frame}
-
-\begin{frame}\frametitle{The Obstacle Problem\footnote{\tiny Introduced by G.\ Stampacchia around 1963. Variational inequalities proposed by A. Signorini (1959) and studied by G. Fichera (1963) and onwards.}}
-\begin{itemize}
-\item Now minimize Dirichlet's energy over the \textit{closed convex cone} defined by  
+over the \textbf{closed convex cone} defined by  
 \[
-K = \{ v \in H^1_0(\Omega) \mid v \geq 0 \text{~a.e.}\}% = H^1_0(\Omega) \cap H^1_+(\Omega).
+K = \{ v \in H^1_0(\Omega) \mid v \geq 0 \text{~a.e.}\}
 \] 
-%\item  \visible<2->{$K$ is no longer an affine set, but it is a \textit{closed convex cone.}
-%:
-% $\alpha > 0$, $u \in K$ implies $\alpha u \in K$ and $\alpha \in (0,1)$ and $u, v \in K$ implies $\alpha u + (1-\alpha) v \in K$
-%}
-\end{itemize}
-
-\begin{center}\textit{
-\visible<2->{ We can no longer reduce the variational inequality to a system of equations, }\visible<3->{but we can use the geometry of $K$ to define an iterative method in which we \textbf{solve} a sequence of (nonlinear) equations.}
-}
-\end{center}
+   \end{beamercolorbox}
+    \end{minipage}}
+    \hfill
+     \visible<3->{
+    \begin{minipage}{0.48\textwidth}
+      \begin{beamercolorbox}[rounded=true, shadow=true, wd=\textwidth]{block title}
+       This yields a \textbf{variational inequality}:\\ Find $u \in K$:
+	\begin{equation*}
+	\int_\Omega \nabla u \cdot \nabla (v-u)  \dd x \geq \int_\Omega f (v - u) \dd x
+	\end{equation*}
+	$\fa v \in K$.\medskip
+	
+\visible<4->{We cannot write this as \textbf{variational equation}.}
+\end{beamercolorbox}
+\end{minipage}}
 \end{frame}
 
 
@@ -205,15 +257,36 @@ K = \{ v \in H^1_0(\Omega) \mid v \geq 0 \text{~a.e.}\}% = H^1_0(\Omega) \cap H^
 \begin{frame}\frametitle{Solving Variational Inequalities}
 \begin{itemize}
 \item \visible<1->{Many possibilities: penalty methods, interior point methods, augmented Lagrangian.}
-\item \visible<2->{Keep in mind: The obstacle problem can be viewed as a \textit{mixed complementarity problem}: Find $(u,\lambda) \in H^1_0(\Omega) \times H^{-1}(\Omega)$ s.t.
+\item \visible<2->{The obstacle problem can be viewed as a \textit{mixed complementarity problem}:\\ Find $(u,\lambda) \in H^1_0(\Omega) \times H^{-1}(\Omega)$ s.t.
 \[
 \underbrace{-\Delta u - \lambda = f,}_{\text{PDE}} \quad \underbrace{u \ge 0 \quad {\color{red}``\lambda \ge 0"}, \quad \langle \lambda, u \rangle = 0}_{\text{Complementarity Condition}}.
-\]}\vspace{-2ex}
+\]}
+\end{itemize}
+\begin{minipage}{0.5\linewidth}
+\begin{itemize}
 \item \visible<3->{
-The Lagrange multiplier $\lambda$ has low regularity. 
-\item This is the source of \textit{mesh dependence}\footnote{\tiny The number of iterations needed to reach the same stopping tolerance increases with mesh refinements.}  for methods that tacitly require $\lambda \in L^2(\Omega)$.
+$\lambda$ has low regularity. 
+\item This results in \textit{mesh dependence}\footnote{\tiny The number of iterations needed to reach the same stopping tolerance increases with mesh refinements.}  for methods tacitly requiring $\lambda \in L^2(\Omega)$.
+}
+\item \visible<4->{$\text{Leb}(\left\{x \in \Omega : u(x) = 0,\; \lambda(x) = 0 \right\}) > 0$ causes numerical instabilities.
+\item ``Loss of strict complementarity''
 }
 \end{itemize}
+\end{minipage}\qquad
+\begin{minipage}{0.4\linewidth}
+\centering\visible<3->{
+	\begin{tikzpicture}
+		\node at (-1.35,1.25) {\includegraphics[clip=true, trim= 4cm 0 0 0, height=4cm]{Figures/ObstacleExperiment2.png}};
+		% \node at (-3.35,1) {\includegraphics[clip=true, trim= 4cm 0 0 0, width=0.44\textwidth]{Figures/ObstacleExperiment2.png}};
+%		\node at (3,0.4) {
+%		   \includegraphics[clip=true, trim= 0 0 0.35cm 0, height=2.1in]{Figures/tikz/FEniCS_plots/example1/example1_ConvergenceRate.pdf}
+%		};
+	    % \node at (-4,2.8) {\includegraphics[height=2cm]{Figures/tikz/FEniCS_plots/example1/colorbar/colorbar1.pdf}};
+	    \node at (-3.7,0.5) {\includegraphics[height=2cm]{Figures/tikz/FEniCS_plots/example1/colorbar/colorbar1.pdf}};
+	    \node at (0.75,2.2) {\includegraphics[height=2cm]{Figures/tikz/FEniCS_plots/example1/colorbar/colorbar2.pdf}};
+    \end{tikzpicture}
+}
+\end{minipage}
 \end{frame}
 
 \begin{frame}\frametitle{Solving Variational Inequalities}
@@ -287,7 +360,8 @@ But solving \eqref{eq:primal-entro-poisson} as is with Newton's method \alert{do
 \begin{frame}\frametitle{Entropic Poisson $\rightarrow$ Saddle Point}
 \begin{itemize}
 \item
-Introducing \textbf{latent variables} $\psi, \widetilde{\psi} \in W$ (latent space) such that $u = \exp(\psi)$ and $\widetilde{\psi} = \ln w$ \visible<2->{transforms \eqref{eq:primal-entro-poisson} into a nonlinear saddle point problem in $(u,\psi)$:
+Introduce \textbf{latent variables} $\psi, \widetilde{\psi} \in W$ (latent space) : $u = \exp(\psi)$ and $\widetilde{\psi} = \ln w$ 
+\item \visible<2->{Transforms \eqref{eq:primal-entro-poisson} into a nonlinear saddle point problem in $(u,\psi)$:
 \begin{equation}\label{eq:lvpp-spp-obstacle}
 	\begin{aligned}
 					\,-\alpha \Delta u + \alert{\psi}
@@ -335,11 +409,11 @@ Regardless of the choice or order of approximating spaces for $H^1_g(\Omega)$ an
 that is \alert{globally bound preserving on the discrete level}.
 }
 \end{center}}
-\visible<4->{
-\begin{itemize}
-\item For now, $V_h \subset H^1(\Omega)$, $W_h \subset L^1(\Omega)$ denote finite dimensional approximation spaces with parameter $h > 0$.
-\end{itemize}
-}
+%\visible<4->{
+%\begin{itemize}
+%\item $V_h \subset H^1(\Omega)$, $W_h \subset L^1(\Omega)$ are finite dimensional subspaces with parameter $h > 0$.
+%\end{itemize}
+%}
 \end{frame}
 
 \begin{frame}\frametitle{Proximal Galerkin}{\small
@@ -394,16 +468,16 @@ that is \alert{globally bound preserving on the discrete level}.
 }
 \end{frame}
 
-\begin{frame}\frametitle{}
-\thispagestyle{empty}
-\begin{center}
-{\Large 
-{\color{Maroon}
-But does it actually work?
-}
-}
-\end{center}
-\end{frame}
+%\begin{frame}\frametitle{}
+%\thispagestyle{empty}
+%\begin{center}
+%{\Large 
+%{\color{Maroon}
+%But does it actually work?
+%}
+%}
+%\end{center}
+%\end{frame}
 
 %\begin{frame}\frametitle{A Word about Theory}
 %\begin{itemize}
@@ -434,77 +508,6 @@ But does it actually work?
 %\end{frame}
 
 
-\begin{frame}\frametitle{Finite Element Spaces}
-\begin{minipage}{.6\textwidth}
-\small
-\begin{itemize}
-\item  Experiments conducted on standard sequences of uniformly refined
-nested meshes $\mathcal{T}_h, \mathcal{T}_{h/2}$, etc. 
-\item We found several stable pairs of FE spaces\footnote{\tiny see Keith \& Surowiec (2024)}
-\item $(\mathbb{P}_p\text{-bubble},\mathbb{P}_{p-1}\text{-broken})$ pairing, e.g.:
-\begin{equation*}
-\label{eq:SubspacePair1}
-	V_h = \mathbb{P}_{p}^{p+2}(\mathcal{T}_h)\cap H^1_0(\Omega)
-	\,,\;
-	% \quad
-	% \text{and}
-	% \quad
-	W_h = \mathbb{P}_{p-1}(\mathcal{T}_h)
-	\,.
-\end{equation*}
-\item $V_h:$ globally continuous direct sums of $(p+2)$-order bubble functions and $p$-order polynomials.
-\item $W_h:$ bounded functions that $(p-1)$-polynomials.
-%\item E.g., $p = 1$: $V_h$ is composed of the direct sum of piecewise linear functions and 3rd order bubble functions and $W_h$ is piecewise constants.
-\end{itemize}
-\end{minipage}%
-\begin{minipage}{.4\textwidth}
-\begin{figure}
-	\centering
-	\begin{tikzpicture} [dot/.style={draw,rectangle,minimum size=4mm,inner sep=0pt,outer sep=0pt,thick}, step=2cm]
-		\draw [thin] (0,0) grid (4,4);
-		\draw [thin] (0,2) -- (2,4);
-		\draw [thin] (0,0) -- (4,4);
-		\draw [thin] (2,0) -- (4,2);
-		\node [font=\normalsize] at (0.4,3.7) {$\Omega_\infty$};
-	% \begin{tikzpicture} [dot/.style={draw,rectangle,minimum size=4mm,inner sep=0pt,outer sep=0pt,thick}]
-		% \draw [thin] (0,0) grid (4,4);
-		% \draw [thin] (0,3) -- (1,4);
-		% \draw [thin] (0,2) -- (2,4);
-		% \draw [thin] (0,1) -- (3,4);
-		% \draw [thin] (0,0) -- (4,4);
-		% \draw [thin] (1,0) -- (4,3);
-		% \draw [thin] (2,0) -- (4,2);
-		% \draw [thin] (3,0) -- (4,1);
-		% \node [font=\normalsize] at (0.35,3.75) {$\Omega_\infty$};
-		\draw [thin,<->] (0,-0.3) -- (4,-0.3) node[draw=none,fill=none,font=\footnotesize,midway,below] {2};
-		\draw [thin,<->] (-0.3,0) -- (-0.3,4) node[draw=none,fill=none,font=\footnotesize,midway,left] {2};
-	\end{tikzpicture}
-%	\qquad\qquad
-%	\begin{tikzpicture}
-%		\draw[thin] (2,2) circle (2 cm);
-%		\draw[thin] (1.29289321882,1.29289321882) -- (1.29289321882,2.70710678118);
-%		\draw[thin] (1.29289321882,1.29289321882) -- (2.70710678118,1.29289321882);
-%		\draw[thin] (2.70710678118,2.70710678118) -- (2.70710678118,1.29289321882);
-%		\draw[thin] (2.70710678118,2.70710678118) -- (1.29289321882,2.70710678118);
-%		\draw[thin] (0.58578643763,0.58578643763) -- (1.29289321882,1.29289321882);
-%		\draw[thin] (3.41421356236,3.41421356236) -- (2.70710678118,2.70710678118);
-%		\draw[thin] (3.41421356236,0.58578643763) -- (2.70710678118,1.29289321882);
-%		\draw[thin] (0.58578643763,3.41421356236) -- (1.29289321882,2.70710678118);
-%		% \node at (2,2) {\includegraphics[clip=true, trim = 0.5cm 0 0.5cm 4cm, width=0.4\textwidth]{Figures/Obstacle_mesh.png}};
-%		\draw [thin,<->] (0,-0.3) -- (4,-0.3) node[draw=none,fill=none,font=\footnotesize,midway,below] {2};
-%		\node [font=\normalsize] at (0.4,3.7) {$\Omega_2$};
-%    \end{tikzpicture}
-	\caption{\label{fig:ObstacleMesh}
-	 Initial FE mesh for domains $\Omega_\infty$
-	 %, $\Omega_{2}$ mesh sizes $h = h_\infty, h_2$, respectively.
-	 % (l): Initial triangular mesh for $(\mathbb{P}_p\text{-bubble},\mathbb{P}_{p-1}\text{-broken})$ pair on $\Omega_\infty$.
-	%(r): Initial quadrilateral mesh for $(\mathbb{Q}_p\text{-bubble},\mathbb{Q}_{p-1}\text{-broken})$ pair on $\Omega_2$.
-	 %We consider various polynomial orders $p \geq 1$ and mesh sizes.
-	 }
-\end{figure}
-\end{minipage}
-\end{frame}
-
 \begin{frame}\frametitle{Experiment 1}
 \begin{center}
 {\color{Maroon} \Large How does PG behave over various meshes and polynomials orders?}
@@ -513,6 +516,7 @@ nested meshes $\mathcal{T}_h, \mathcal{T}_{h/2}$, etc.
 
 \begin{frame}\frametitle{Experiment 1}
 \begin{itemize}
+\item $\Omega := \Omega_{\infty} = [-1,1]\times[-1,1] \subset \mathbb R^2$.
 \item Set $g=u$, where $u(x,y)$ is the smooth manufactured solution
 \begin{equation}
 \label{eq:Biactivity_SmoothManufacturedSolution}
@@ -534,8 +538,7 @@ nested meshes $\mathcal{T}_h, \mathcal{T}_{h/2}$, etc.
 		-12x^2 & \text{otherwise.}\\
 	\end{cases}
 \end{equation}
-\item \visible<2->{$\lambda \equiv 0$:  this is a \textbf{biactive} solution, meaning
-problem is nonsmooth at the solution.}
+\item \visible<2->{$\lambda \equiv 0$: \alert{strict complementarity fails} on large subset of $\Omega$!}
 %\item The active/contact set has positive Lebesgue measure.
 \item \visible<3->{Proximal point is a (slow) fixed point method if $\alpha$ is left fixed. 
 \item We choose $\left\{\alpha_k\right\}$ with $\alpha_1 = 1$ and $\alpha_k$ \alert{increasing} to a maximum value of $10^{10}$. 
@@ -588,7 +591,8 @@ problem is nonsmooth at the solution.}
 %	The results are similar on finer meshes due to mesh-independence; cf.~\Cref{tab:BiactivityMeshIndependence}.
 %	}
 \end{figure}
-
+\hypertarget{example_1}{}
+ \hyperlink{target}{\beamerbutton{Go to Finite Element Spaces}}
 \end{frame}
 
 \begin{frame}\frametitle{Experiment 1: Results}
@@ -844,7 +848,7 @@ problem is nonsmooth at the solution.}
 
 
 
-\section{The Latent Variable Proximal Point Method}
+\section{The Latent Variable Proximal Point Algorithm}
 \begin{frame}\frametitle{Latent Variable Proximal Point}
 \begin{center}
 {\Large
@@ -855,14 +859,14 @@ What is really going on here? %(beware: incoming hand-waving)
 \end{center}
 \end{frame}
 
-\begin{frame}\frametitle{The LVPP Method}
+\begin{frame}\frametitle{The LVPP Algorithm}
 \only<1>{Abstractly speaking, we began with the optimization problem:}
 \only<2>{The optimality conditions provide us with a variational inequality:}
 \only<3>{Since the variational inequality does not reduce to a variational equation:}
 \[
 \only<1>{ \min_{u \in K} J(u)}
 \only<2>{ \min_{u \in K} J(u) \quad \rightarrow \quad \text{Find } u \in K : J'(u)(v - u) \ge 0,\; \forall v \in K.}
-\only<3>{\text{ Solve }\quad \min_{u \in K} J(u) \quad \text{ by iteratively solving }  \quad \min_{u \in K} J(u) + \alpha^{-1} D(u,u_{\text{old}}) \quad \text{instead.}}
+\only<3>{\text{ Solve }\quad \min_{u \in K} J(u) \quad \text{ by recursively solving }  \quad \min_{u \in K} J(u) + \alpha^{-1} D(u,u_{\text{old}}) \quad \text{instead.}}
 \]
 \only<1,2>{
 \begin{itemize}
@@ -875,15 +879,23 @@ What is really going on here? %(beware: incoming hand-waving)
 \end{itemize}
 }
 \only<3->{
+\begin{minipage}{0.5\textwidth}
 \begin{itemize}
 \item $V$: a reflexive Banach space,
 \item $K \subset V$: a closed convex set,
 %$
 %K = \left\{v \in V \left| B v \in C \text{ a.e. } \Omega \right.\right\}
 %$
-\item $J$: a smooth coercive functional
-and $D : K \times K \to \overline{\mathbb R}$ is a \alert{Bregman distance.}
+\item $J$: a smooth coercive functional,
+\item $D : K \times K \to \overline{\mathbb R}$ is a \alert{Bregman distance.}
 \end{itemize}
+\end{minipage}%
+\begin{minipage}{0.5\textwidth}
+\begin{figure}[h]
+\includegraphics[width=0.8\linewidth]{Figures/Prox.pdf}
+\caption{Illustration of Bregman Proximal Point.} 
+\end{figure}
+\end{minipage}
 }
 
 %\begin{itemize}
@@ -905,9 +917,9 @@ and $D : K \times K \to \overline{\mathbb R}$ is a \alert{Bregman distance.}
 %\end{itemize}
 \end{frame}
 
-\begin{frame}\frametitle{The LVPP Method}
+\begin{frame}\frametitle{The LVPP Algorithm}
 \begin{itemize}
-\item Bregman distances are induced by a \textbf{distance-generating function} $R$.
+\item Bregman distances are induced by \textbf{distance-generating functions} $R$.
 \item They measure the linearization error of $R$ at any given point in its domain:
 \begin{equation*}
 %\label{eq:BregmanDivergence}
@@ -917,207 +929,310 @@ D_R(a, b) := R(a) - R(b) - \nabla R(b) \cdot (a-b)\,, \quad a \in \text{$\mathop
 \end{itemize}
 \end{frame}
 
-\begin{frame}\frametitle{The LVPP Method}
-More specifically:
+\begin{frame}\frametitle{The LVPP Algorithm}
+\begin{itemize}
+\item \visible<1->{Of particular interest are \textbf{Legendre functions}\footnote{\tiny Introduced by Rockafellar (1967)}:\vspace{1ex}
+\begin{itemize}
+\item \visible<2->{$R : \mathbb R^m \to \mathbb R$ is proper, lower semicontinuous, convex}
+\item \visible<3->{$\mathop{\text{int}} \mathop{\text{dom}} R \ne \emptyset$ and $R$ is differentiable on $C := \mathop{\text{int}} \mathop{\text{dom}} R$}
+\item \visible<4->{ $\|\nabla R(x_k) \| \to +\infty$ whenever $x_k \in \mathop{\text{int}} C$ converges to $x \in \partial C$.} 
+\end{itemize}}\vspace{1ex}
+\item \visible<5->{Recall: $R^*(a^\ast) := \sup_{a \in \mathbb R^m} \{ a \cdot a^\ast - R(a) \}$ the \textbf{convex conjugate} of $R$}
+\item \visible<6->{Property 1: $R(a)/\|a\| \to \infty$ as $\|a\| \to +\infty$ iff $ \mathop{\text{dom}} R^* = \mathbb R^m$}
+\item  \visible<7->{Property 2:
+ $\nabla R \colon \operatorname{int}C \to \operatorname{int}(\operatorname{dom} R^*)$ is a topological isomorphism\footnote{\tiny Rockafellar Theorem 1 (1967), see also Chap 26 in Rockafellar (1970)} with 
+ \vspace{1ex}
+ \begin{minipage}{0.5\linewidth}
+ \Large
+ \[
+ (\nabla R)^{-1} = \nabla R^\ast
+ \]
+ \end{minipage}
+ \begin{minipage}{0.4\linewidth}
+\begin{figure}[h]
+\includegraphics[width=0.8\linewidth]{Figures/Geodesic3.pdf} 
+\end{figure}
+\end{minipage}
+}
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}\frametitle{The LVPP Algorithm}
+Suppose
+\begin{equation*} \label{eq:intro:feasible_set}
+K = \{ v \in V \mid Bv(x) \in C(x) \text{ for almost every } x \in \Omega_d \subset \overline{\Omega} \}.
+\end{equation*}
+\visible<2->{
+where 
 \begin{itemize}
 \item $\Omega \subset \mathbb{R}^n$:  Lipschitz domains
-\item $K$ is defined by
-\begin{equation} \label{eq:intro:feasible_set}
-K = \{ v \in V \mid Bv(x) \in C(x) \text{ for almost every } x \in \Omega_d \subset \overline{\Omega} \}.
-\end{equation}
-where
 \item $\Omega_d\subset \overline{\Omega}$, Hausdorff measurable, $d \le n$,
 \item $V \subset L^1(\Omega)$ is a Banach space on $\Omega$, 
-\item $B \colon V \to L^1(\Omega_d)$ is a bounded linear operator on $V$ such that $(Bv)(x) \subset C(x) \subset \mathbb{R}^m$ a closed convex set.
-\item 
-
-\item  $D(u,v) = B(u) - B(v) - B'(v)(u - v)$ is a Bregman distance, $B$ captures the geometry of $C$ such that the subproblems can be considered \textit{unconstrained}.
-\item  Consequently, $u$ should solve the optimality system:
-\[
-\alpha J'(u) + \Lambda^* B'(\Lambda u) = \Lambda^* B'(\Lambda v).
-\]
-\item  This still contains a potential difficulty in the term $B'(\Lambda u)$.
+\item $B \colon V \to L^1(\Omega_d)$ is a bounded linear operator on $V$
+\item  $C(x) \subset \mathbb{R}^m$ a closed convex set for almost every $x \in \Omega_{d}$.
 \end{itemize}
+}
 \end{frame}
 
-\begin{frame}\frametitle{Legendre-Nemitskii Operators}
-\begin{itemize}
-\item $B$ should also be an integral functional so that $B'$ is a structured superposition (Nemitskii) operator.
-\item  I.e. $\langle B'(y), v \rangle = (\nabla f(y), v)$ for some real-valued mapping $f$. \pause
-\item Key point: $f$ should be a \textit{Legendre} function\footnote{\tiny Rockafellar (1970)} whose domain \textit{coincides} with $C$. \pause
-\item Key property: $\nabla f$ forms a bijection from $\mathrm{int\, dom\,} f$ to $\mathrm{int\, dom\,} f^*$, where $f^*$ is the Fenchel conjugate of $f$, i.e. $(\nabla f)^{-1} = \nabla f^*$, where it is defined.\pause
-\item I propose we call such operators $B'$ \textbf{Legendre-Nemitskii operators}.\pause 
-\item We now introduce the \textit{latent variable} $\psi$ by setting $(\psi,v) =  (\nabla f(\Lambda u), v)$.  
-\end{itemize}
-\begin{figure}[h]
-\includegraphics[width=0.85\linewidth]{Figures/lvpp-transform-table.png} 
-\end{figure}
+\begin{frame}\frametitle{The LVPP Algorithm}
+Associating a Legendre function $R$ with $C(x)$ brings us back to proximal point:\\ \visible<2->{For an initial guess $u^0 \in V$ and proximity parameters $\left\{\alpha_k\right\}$ find $u \in \mathop{\text{argmin}}_{v \in K} J(v)$  by  recursively computing} 
+\visible<3->{
+\begin{equation}\label{eq:lvpp-op}
+\only<3>{
+u^{k} \in \mathop{\text{argmin}}_{u \in K} J(u) + \alpha_{k}^{-1} \int_{\Omega_d} D_R(Bu, Bu^{k-1}) \dd \mathcal{H}_d, \quad k = 1, 2, \dots.
+}
+\only<4->{
+    \text{Find } u^k \in K: \quad \underbrace{\alpha_k J^\prime(u^k) +  B^* \nabla R(Bu^k) - B^* \nabla R(Bu^{k-1}) = 0,}_{\text{Properties of $R$ force constraints to be inactive for $u^k$} }
+}
+\end{equation}
+}\visible<5->{Using again \alert{latent variables}: given $\psi^0 \in W$, find $(u^{k}, \psi^{k}) \in V \times W$ satisfying
+\begin{subequations} \label{eq:intro:lvpp}
+\begin{align}
+\label{eq:intro:lvpp:a}
+\alpha_{k} J'(u^{k}) + B^*\psi^{k} &= B^*\psi^{k-1}, \\
+\label{eq:intro:lvpp:b}
+Bu^{k} - \nabla R^*(\psi^{k}) &= 0,
+\end{align}
+\end{subequations}
+}\visible<6->{\textbf{\eqref{eq:intro:lvpp:b} ensures that }$Bu^k \in  \nabla R^*(W) \subset C$!}\\
+\visible<7->{ 
+LVPP offers a \textbf{new, unifying perspective} on treating pointwise inequality constraints.
+}
 \end{frame}
 
-\begin{frame}\frametitle{LVPP-Saddle Point Problem}
-\begin{figure}[h]
-\includegraphics[width=0.5\textwidth, keepaspectratio]{Figures/lvpp-spp.png}
-\caption{The LVPP nonlinear saddle point subproblem. Similar saddle point formulations are \textbf{not} available in interior point, quadratic penalty, or augmented Lagrangian approaches.}
-\end{figure}
-\begin{center}
- After discretization, the solution $(\overline{u}_h,\overline{\psi}_{h})$ provides a latent solution: $\nabla f^*(\overline{\psi}_h)$, which is always in $C$. This \textit{guarantees} a \textit{globally feasible discrete} approximation of $\Lambda \overline{u}$. \\ \textbf{This is what is going on at the core of the Proximal Galerkin method!}
-\end{center}
-\end{frame}
+%\begin{frame}\frametitle{Legendre-Nemitskii Operators}
+%\begin{itemize}
+%\item $B$ should also be an integral functional so that $B'$ is a structured superposition (Nemitskii) operator.
+%\item  I.e. $\langle B'(y), v \rangle = (\nabla f(y), v)$ for some real-valued mapping $f$. \pause
+%\item Key point: $f$ should be a \textit{Legendre} function\footnote{\tiny Rockafellar (1970)} whose domain \textit{coincides} with $C$. \pause
+%\item Key property: $\nabla f$ forms a bijection from $\mathrm{int\, dom\,} f$ to $\mathrm{int\, dom\,} f^*$, where $f^*$ is the Fenchel conjugate of $f$, i.e. $(\nabla f)^{-1} = \nabla f^*$, where it is defined.\pause
+%\item I propose we call such operators $B'$ \textbf{Legendre-Nemitskii operators}.\pause 
+%\item We now introduce the \textit{latent variable} $\psi$ by setting $(\psi,v) =  (\nabla f(\Lambda u), v)$.  
+%\end{itemize}
+%\begin{figure}[h]
+%\includegraphics[width=0.85\linewidth]{Figures/lvpp-transform-table.png} 
+%\end{figure}
+%\end{frame}
+
+%\begin{frame}\frametitle{LVPP-Saddle Point Problem}
+%\begin{figure}[h]
+%\includegraphics[width=0.5\textwidth, keepaspectratio]{Figures/lvpp-spp.png}
+%\caption{The LVPP nonlinear saddle point subproblem. Similar saddle point formulations are \textbf{not} available in interior point, quadratic penalty, or augmented Lagrangian approaches.}
+%\end{figure}
+%\begin{center}
+% After discretization, the solution $(\overline{u}_h,\overline{\psi}_{h})$ provides a latent solution: $\nabla f^*(\overline{\psi}_h)$, which is always in $C$. This \textit{guarantees} a \textit{globally feasible discrete} approximation of $\Lambda \overline{u}$. \\ \textbf{This is what is going on at the core of the Proximal Galerkin method!}
+%\end{center}
+%\end{frame}
 
 \section{Examples and Open Questions}
 %\subsection{Eikonal}
-\begin{frame}\frametitle{Gradient Constraints}
-\begin{itemize}
-\item  $\Omega \subset \mathbb R^n$ is an open bounded subset.
-\item  $\rho : \Omega \to \mathbb R_+$ is essentially bounded and $\rho \ge \underline{\rho} > 0$ for constant $\underline{\rho}$ (a.e.\ $\Omega$).
-\item We want to find $u$  that  minimizes 
-\[
-J(v) := -\int_{\Omega} v \, \mathrm{d} x 
-\] 
-over
-\[
-K = \left\{
-v \in W^{1,\infty}_g(\Omega) \left| | \nabla v | \le \rho \text{ a.e. } \Omega \right.
-\right\}
-\] 
-where $g \in W^{1,\infty}(\Omega)$ satisfies the bound constraint. \pause
-\item S. Zagatti (2014)\footnote{\tiny Theorem 1., \textit{Maximal generalized solution of eikonal equation}  J. Differential Equations 257 (2014) 231–263 } if $\rho$ is continuous on $\Omega$ up to a closed null set $N$, then $u$ is a generalized solution of the \textbf{Eikonal equation}:
-\begin{equation}\label{eq:eik}
-\aligned
-|\nabla u| &= \rho \text{ in } \Omega,\\
-u &= g \text{ on } \partial \Omega.
-\endaligned
-\end{equation}
-\end{itemize}
+%\begin{frame}\frametitle{Gradient Constraints}
+%\begin{itemize}
+%\item  $\Omega \subset \mathbb R^n$ is an open bounded subset.
+%\item  $\rho : \Omega \to \mathbb R_+$ is essentially bounded and $\rho \ge \underline{\rho} > 0$ for constant $\underline{\rho}$ (a.e.\ $\Omega$).
+%\item We want to find $u$  that  minimizes 
+%\[
+%J(v) := -\int_{\Omega} v \, \mathrm{d} x 
+%\] 
+%over
+%\[
+%K = \left\{
+%v \in W^{1,\infty}_g(\Omega) \left| | \nabla v | \le \rho \text{ a.e. } \Omega \right.
+%\right\}
+%\] 
+%where $g \in W^{1,\infty}(\Omega)$ satisfies the bound constraint. \pause
+%\item S. Zagatti (2014)\footnote{\tiny Theorem 1., \textit{Maximal generalized solution of eikonal equation}  J. Differential Equations 257 (2014) 231–263 } if $\rho$ is continuous on $\Omega$ up to a closed null set $N$, then $u$ is a generalized solution of the \textbf{Eikonal equation}:
+%\begin{equation}\label{eq:eik}
+%\aligned
+%|\nabla u| &= \rho \text{ in } \Omega,\\
+%u &= g \text{ on } \partial \Omega.
+%\endaligned
+%\end{equation}
+%\end{itemize}
+%\end{frame}
+
+\begin{frame}\frametitle{}
+\thispagestyle{empty}
+\begin{table}
+\centering
+\small
+% \renewcommand{\arraystretch}{0.6}
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.4}
+    \begin{tabular}{ c|c|c|c } 
+     \toprule
+      Feasible set $K$ & Legendre function $R$ & $B$ & $\nabla R^*(\psi)$ \\ 
+     \midrule
+     $\big\{ u \geq \phi \big\}$ & $(a - \phi) \ln (a - \phi) - (a - \phi)$ & $\operatorname{id}$ & $\phi + \exp\psi$ \\[2ex]
+     $\big\{ \phi_1 \leq u \leq \phi_2 \big\}$ & $(a - \phi_1) \ln (a - \phi_1) + (\phi_2-a) \ln (\phi_2-a)$ & $\operatorname{id}$ & $\dfrac{\phi_1 + \phi_2\exp\psi}{1 + \exp\psi}$ \\[2ex]
+     % $\big\{ \phi_1 \leq u \leq \phi_2 \big\}$ & $\sum_{i=1}^2 (-1)^i (\phi_i - a) \ln \left( (-1)^i (\phi_i - a)\right)$ & $\operatorname{id}$ & $\dfrac{\phi_1 + \phi_2\exp\psi}{1 + \exp\psi}$ \\[2ex]
+     $\big\{\gamma u \ge 0 \big\}$ & $a \ln a - a$ & $\gamma$ &  $\exp\psi$ \\[2ex]
+     $\big\{ (\gamma u)\cdot n \geq 0 \big\}$ & $a \ln a - a$ & $\gamma(\cdot) \cdot n$ & $\exp\psi$ \\[2ex]
+     $\big\{| \nabla u | \le \phi \big\}$ & $ -\sqrt{\phi^2 - | a |^2}$ & $\nabla$  & $\dfrac{\phi\psi}{\sqrt{1 + | \psi |^2}}$ \\[3ex] 
+     $\big\{ u \ge 0,\; \sum_{i} u_i = 1 \big\}$ & $\sum_{i} a_i \ln(a_i)$ & $\operatorname{id}$ & $\dfrac{\exp\psi}{\sum_{i} \exp\psi_i}$\\[2ex]
+     $\big\{ \det (\nabla^2 u) \geq 0 \big\}$ & $\operatorname{tr}(a\ln a - a)$ & $\nabla^2$ & $\exp \psi$ \\[2ex]
+     \bottomrule
+    \end{tabular}
+    % \begin{tabular}{ c|c|c|c|c } 
+    %  \toprule
+    %   Feasible set $K$ & Legendre function $R$ & $B$ & $B^* \psi$ & $\nabla R^*(\psi)$ \\ 
+    %  \midrule
+    %  $\big\{ u \geq \phi \big\}$ & $(a - \phi) \ln (a - \phi) - (a - \phi)$ & $\operatorname{id}$ & $\psi$ & $\phi + \exp\psi$ \\[2ex]
+    %  $\big\{ \phi_1 \leq u \leq \phi_2 \big\}$ & $(a - \phi_1) \ln (a - \phi_1) + (\phi_2-a) \ln (\phi_2-a)$ & $\operatorname{id}$ & $\psi$ & $\dfrac{\phi_1 + \phi_2\exp\psi}{1 + \exp\psi}$ \\[2ex]
+    %  % $\big\{ \phi_1 \leq u \leq \phi_2 \big\}$ & $\sum_{i=1}^2 (÷-1)^i (\phi_i - a) \ln \left( (-1)^i (\phi_i - a)\right)$ & $\operatorname{id}$ & $\psi$ & $\dfrac{\phi_1 + \phi_2\exp\psi}{1 + \exp\psi}$ \\[2ex]
+    %  $\big\{\gamma u \ge 0 \big\}$ & $a \ln a - a$ & $\gamma$ &  $\gamma^* \psi$ &  $\exp\psi$ \\[2ex]
+    %  $\big\{ (\gamma u)\cdot n \geq 0 \big\}$ & $a \ln a - a$ & $\gamma(\cdot) \cdot n$ & $\gamma^*(\psi n)$ & $\exp\psi$ \\[2ex]
+    %  % $\big\{ 0 \leq u \leq 1 \big\}$ & $x \ln x + (1-x) \ln (1-x)$ & $\operatorname{id}$ & $\psi$ & $u = \frac{\exp(\psi)}{1 + \exp(\psi)}$ \\[2ex]
+    %  $\big\{\| \nabla u \|_{2} \le \phi \big\}$ & $ -\sqrt{\phi^2 - | a |^2}$ & $\nabla$  & $-\mathrm{div} \psi$ &$\phi\psi/\sqrt{1 + | \psi |^2}$ \\[2ex] 
+    %  $\big\{ u \ge 0,\; \sum_{i} u_i = 1 \big\}$ & $\sum_{i} a_i \ln(a_i)$ & $\operatorname{id}$ & $ \psi$ & $\exp(\psi_i)/\big(\sum_{j} \exp\psi_j\big)$\\[3ex]
+    %  $\big\{ \det (\nabla^2 u) \geq 0 \big\}$ & $\operatorname{tr}(a\ln a - a)$ & $\nabla^2$ & $\operatorname{div}\operatorname{Div}\psi$ & $\exp \psi$ \\[2ex]
+    %  % $\big\{ \det (\nabla u + I) \geq 0 \big\}$ & not applicable & $\nabla$ & $\operatorname{Div}\psi$ & $\nabla u = \exp \psi - I$ \\[2ex]
+    %  % $\big\{ g(u) \geq 0 \big\}$ & not applicable & $\operatorname{id}$ & $\psi$ & $u = \exp( g(\psi) ) \psi / g(\psi)$ \\[2ex]
+    %  % $\big\{ g(u) \leq 1 : g \text{~positively homogeneous} \big\}$ & unknown (case 1) & $\operatorname{id}$ & $\psi$ & $u = \dfrac{\exp g(\psi)}{1 + \exp g(\psi)} \dfrac{\psi}{g(\psi)}$ \\[3ex]
+    %  % $\big\{ g_+(u) \leq 1 \big\}$ & not applicable & $\operatorname{id}$ & $\psi$ & $u = \dfrac{\psi\exp g(\psi)}{1 + g(\psi)\exp g(\psi)}$ \\[3ex]
+    %  \bottomrule
+    % \end{tabular}
+    \caption{\label{tab:ConstraintTable} Some example feasible sets with an associated Legendre function $R$. 
+%    Here, $n$ is the unit outward normal to $\partial \Omega$, $\operatorname{id}$ is the identity operator, $\gamma$ is the trace operator, and $\nabla^2$ is the Hessian operator.
+    % $g$ is a homogeneous function, and $g_+$ is a positively homogeneous function.
+%    The function $u$ can be scalar- or vector-valued, as appropriate.
+%    Likewise, $\exp$ denotes the scalar, component-wise, or matrix exponential function.
+    }
+\vspace{-1em}
+%\end{sidewaystable}
+\end{table}
 \end{frame}
 
-\begin{frame}\frametitle{LVPP-SPP for Eikonal Equation}
-\begin{itemize}
-\item
-Using
-%\begin{equation*}\label{eq:hellinger}
-$
-b(y;x) := -\sqrt{\rho^2(x) - |y|^2} \quad y \in \mathbb R^n,~ x \in \Omega
-$
-%\,.
-%\end{equation*}
-we obtain the LVPP saddle point problem for the Eikonal equation:\medskip
+%
+%\begin{frame}\frametitle{LVPP-SPP for Eikonal Equation}
+%\begin{itemize}
+%\item
+%Using
+%%\begin{equation*}\label{eq:hellinger}
+%$
+%b(y;x) := -\sqrt{\rho^2(x) - |y|^2} \quad y \in \mathbb R^n,~ x \in \Omega
+%$
+%%\,.
+%%\end{equation*}
+%we obtain the LVPP saddle point problem for the Eikonal equation:\medskip
+%
+%\only<1>{
+%Given a latent variable  $\varphi$, find $(u,\psi) \in H^1_0(\Omega) \times L^2(\Omega)^n$ such that
+%\begin{equation}\label{eq:grad-lvpp}
+%    \aligned
+%  -  \frac{\rho(x)}{\sqrt{1+|\psi|^2}}\psi  &+  \nabla u&&= \; 0,\\
+% - \mathrm{div}\, \psi & &&= \; \alpha 1 - \mathrm{div}\, \varphi \,.\\
+%    \endaligned
+%\end{equation}}
+%\pause
+%\only<2>{
+%Given a latent variable  $\varphi$, find $(u,\psi) \in  L^2(\Omega) \times H(\operatorname{div},\Omega)$ such that
+%\begin{equation}
+%\label{eq:EikonalVF}
+%%    \left\{
+%    \begin{aligned}
+%%        &\,\text{Find }
+%%        \psi \in H(\operatorname{div},\Omega)
+%%        \text{ and }
+%%        u \in L^2(\Omega)
+%%        \text{ such that}
+%%        \\
+%        &\,
+%        \begin{alignedat}{3}
+%            \bigg(\frac{\rho\,\psi}{\sqrt{1/\alpha+|\psi|^2}}, w\bigg) + (u, \operatorname{div} w)
+%            &= 0
+%            &&~\fa w \in H(\operatorname{div},\Omega)
+%            \,,
+%            \\
+%            (\operatorname{div}\psi, v)
+%            &=
+%            (-1, v) + (\operatorname{div}\varphi,v)
+%            &&~\fa v \in L^2(\Omega)
+%            \,.
+%        \end{alignedat}
+%    \end{aligned}
+%%    \right.
+%\end{equation}}
+%
+%\end{itemize}
+%\end{frame}
 
-\only<1>{
-Given a latent variable  $\varphi$, find $(u,\psi) \in H^1_0(\Omega) \times L^2(\Omega)^n$ such that
-\begin{equation}\label{eq:grad-lvpp}
-    \aligned
-  -  \frac{\rho(x)}{\sqrt{1+|\psi|^2}}\psi  &+  \nabla u&&= \; 0,\\
- - \mathrm{div}\, \psi & &&= \; \alpha 1 - \mathrm{div}\, \varphi \,.\\
-    \endaligned
-\end{equation}}
-\pause
-\only<2>{
-Given a latent variable  $\varphi$, find $(u,\psi) \in  L^2(\Omega) \times H(\operatorname{div},\Omega)$ such that
-\begin{equation}
-\label{eq:EikonalVF}
+%\begin{frame}\frametitle{Eikonal}
+%\begin{itemize}
+%\item
+%Discretization:
+%\begin{equation}
+%\label{eq:EikonalDVF}
 %    \left\{
-    \begin{aligned}
+%    \begin{aligned}
 %        &\,\text{Find }
-%        \psi \in H(\operatorname{div},\Omega)
+%        \psi_h \in W_h
 %        \text{ and }
-%        u \in L^2(\Omega)
+%        u_h \in V_h
 %        \text{ such that}
 %        \\
-        &\,
-        \begin{alignedat}{3}
-            \bigg(\frac{\rho\,\psi}{\sqrt{1/\alpha+|\psi|^2}}, w\bigg) + (u, \operatorname{div} w)
-            &= 0
-            &&~\fa w \in H(\operatorname{div},\Omega)
-            \,,
-            \\
-            (\operatorname{div}\psi, v)
-            &=
-            (-1, v) + (\operatorname{div}\varphi,v)
-            &&~\fa v \in L^2(\Omega)
-            \,.
-        \end{alignedat}
-    \end{aligned}
+%        &\,
+%        \begin{alignedat}{3}
+%            \bigg(\frac{\rho\,\psi_h}{\sqrt{1/\alpha+|\psi_h|^2}}, w\bigg) + (u_h, \operatorname{div} w)
+%            &= 0
+%            &&~\fa w \in W_h
+%            \,,
+%            \\
+%            (\operatorname{div}\psi_h, v)
+%            &=
+%            (-1, v) + (\operatorname{div}\varphi_h,v)
+%            &&~\fa v \in V_h
+%            \,.
+%        \end{alignedat}
+%    \end{aligned}
 %    \right.
-\end{equation}}
-
-\end{itemize}
-\end{frame}
-
-\begin{frame}\frametitle{Eikonal}
-\begin{itemize}
-\item
-Discretization:
-\begin{equation}
-\label{eq:EikonalDVF}
-    \left\{
-    \begin{aligned}
-        &\,\text{Find }
-        \psi_h \in W_h
-        \text{ and }
-        u_h \in V_h
-        \text{ such that}
-        \\
-        &\,
-        \begin{alignedat}{3}
-            \bigg(\frac{\rho\,\psi_h}{\sqrt{1/\alpha+|\psi_h|^2}}, w\bigg) + (u_h, \operatorname{div} w)
-            &= 0
-            &&~\fa w \in W_h
-            \,,
-            \\
-            (\operatorname{div}\psi_h, v)
-            &=
-            (-1, v) + (\operatorname{div}\varphi_h,v)
-            &&~\fa v \in V_h
-            \,.
-        \end{alignedat}
-    \end{aligned}
-    \right.
-\end{equation}
-where
-\[
-    V_h = \mathbb{P}_{p-1}(\mathcal{T}_h)
-    \,,
-    \qquad
-    W_h = \mathbb{RT}_{p}(\mathcal{T}_h)
-    \,.
-\]
-\item The linearization is essentially Darcy's law with $u$ pressure, $\psi$ flux. 
-\item Solve with Newton's method using MUMPS.
-\end{itemize}
-%\begin{itemize}
-%\item The weak form 
+%\end{equation}
+%where
 %\[
-%\int_{\Omega} \operatorname{div}\psi v \mathrm{d} x + \int_{\Omega} u \operatorname{div}w \mathrm{d} x
-%- \int_{\Omega} \frac{\rho}{\sqrt{1 + \|\psi\|^2}} \psi \cdot w \mathrm{d}x = 
-%\alpha \int_{\Omega} v \mathrm{d} x + \int_{\Omega} \operatorname{div}\psi_0 v \mathrm{d} x 
-%\]
-%\item The linearization is essentially Darcy's law with $u$ pressure, $\psi$ flux. 
-%\item  We suggest the finite element spaces \[
-%    V_h = \mathbb{P}_{p}(\mathcal{T}_h) %\cap H^1_0(\Omega)
+%    V_h = \mathbb{P}_{p-1}(\mathcal{T}_h)
 %    \,,
 %    \qquad
-%    W_h = \mathbb{RT}_{p+1}(\mathcal{T}_h) \cap H(\operatorname{div} , \Omega)
-%    % W_h = \mathbb{P}_{p-1}^b(\mathcal{T}_h)
+%    W_h = \mathbb{RT}_{p}(\mathcal{T}_h)
 %    \,.
 %\]
-%where  $\mathbb{RT}_{p+1}$ represents the Raviart-Thomas space of order $p+1$ and $\mathbb{P}_{p}$ from earlier.
+%\item The linearization is essentially Darcy's law with $u$ pressure, $\psi$ flux. 
 %\item Solve with Newton's method using MUMPS.
 %\end{itemize}
-\end{frame}
+%%\begin{itemize}
+%%\item The weak form 
+%%\[
+%%\int_{\Omega} \operatorname{div}\psi v \mathrm{d} x + \int_{\Omega} u \operatorname{div}w \mathrm{d} x
+%%- \int_{\Omega} \frac{\rho}{\sqrt{1 + \|\psi\|^2}} \psi \cdot w \mathrm{d}x = 
+%%\alpha \int_{\Omega} v \mathrm{d} x + \int_{\Omega} \operatorname{div}\psi_0 v \mathrm{d} x 
+%%\]
+%%\item The linearization is essentially Darcy's law with $u$ pressure, $\psi$ flux. 
+%%\item  We suggest the finite element spaces \[
+%%    V_h = \mathbb{P}_{p}(\mathcal{T}_h) %\cap H^1_0(\Omega)
+%%    \,,
+%%    \qquad
+%%    W_h = \mathbb{RT}_{p+1}(\mathcal{T}_h) \cap H(\operatorname{div} , \Omega)
+%%    % W_h = \mathbb{P}_{p-1}^b(\mathcal{T}_h)
+%%    \,.
+%%\]
+%%where  $\mathbb{RT}_{p+1}$ represents the Raviart-Thomas space of order $p+1$ and $\mathbb{P}_{p}$ from earlier.
+%%\item Solve with Newton's method using MUMPS.
+%%\end{itemize}
+%\end{frame}
 
-\begin{frame}\frametitle{Eikonal}
-{\Large
-{\color{Maroon}
-But does it actually work?
-}
-}
-\end{frame}
+%\begin{frame}\frametitle{Eikonal}
+%{\Large
+%{\color{Maroon}
+%But does it actually work?
+%}
+%}
+%\end{frame}
 
 
-\begin{frame}{3D Eikonal}
+%\begin{frame}{3D Eikonal}
 %  \animategraphics[loop,controls,width=\linewidth]{10}{./videos/animation-}{0}{59}
-\end{frame}
+%\end{frame}
 
 
 %\subsection{Monge-Amp\'ere}
@@ -1303,6 +1418,84 @@ But does it actually work?
 \Huge Thank You!
 \end{center}
 \end{frame}
+
+\appendix
+\begin{frame}
+    \frametitle{Finite Element Spaces}
+    \hypertarget{target}{}  % Target anchor
+    
+\begin{minipage}{.6\textwidth}
+\small
+\begin{itemize}
+\item  Experiments conducted on standard sequences of uniformly refined
+nested meshes $\mathcal{T}_h, \mathcal{T}_{h/2}$, etc. 
+\item We found several stable pairs of FE spaces\footnote{\tiny see Keith \& Surowiec (2024)}
+\item $(\mathbb{P}_p\text{-bubble},\mathbb{P}_{p-1}\text{-broken})$ pairing, e.g.:
+\begin{equation*}
+\label{eq:SubspacePair1}
+	V_h = \mathbb{P}_{p}^{p+2}(\mathcal{T}_h)\cap H^1_0(\Omega)
+	\,,\;
+	% \quad
+	% \text{and}
+	% \quad
+	W_h = \mathbb{P}_{p-1}(\mathcal{T}_h)
+	\,.
+\end{equation*}
+\item $V_h:$ globally continuous direct sums of $(p+2)$-order bubble functions and $p$-order polynomials.
+\item $W_h:$ bounded functions that $(p-1)$-polynomials.
+%\item E.g., $p = 1$: $V_h$ is composed of the direct sum of piecewise linear functions and 3rd order bubble functions and $W_h$ is piecewise constants.
+\end{itemize}
+\end{minipage}%
+\begin{minipage}{.4\textwidth}
+\begin{figure}
+	\centering
+	\begin{tikzpicture} [dot/.style={draw,rectangle,minimum size=4mm,inner sep=0pt,outer sep=0pt,thick}, step=2cm]
+		\draw [thin] (0,0) grid (4,4);
+		\draw [thin] (0,2) -- (2,4);
+		\draw [thin] (0,0) -- (4,4);
+		\draw [thin] (2,0) -- (4,2);
+		\node [font=\normalsize] at (0.4,3.7) {$\Omega_\infty$};
+	% \begin{tikzpicture} [dot/.style={draw,rectangle,minimum size=4mm,inner sep=0pt,outer sep=0pt,thick}]
+		% \draw [thin] (0,0) grid (4,4);
+		% \draw [thin] (0,3) -- (1,4);
+		% \draw [thin] (0,2) -- (2,4);
+		% \draw [thin] (0,1) -- (3,4);
+		% \draw [thin] (0,0) -- (4,4);
+		% \draw [thin] (1,0) -- (4,3);
+		% \draw [thin] (2,0) -- (4,2);
+		% \draw [thin] (3,0) -- (4,1);
+		% \node [font=\normalsize] at (0.35,3.75) {$\Omega_\infty$};
+		\draw [thin,<->] (0,-0.3) -- (4,-0.3) node[draw=none,fill=none,font=\footnotesize,midway,below] {2};
+		\draw [thin,<->] (-0.3,0) -- (-0.3,4) node[draw=none,fill=none,font=\footnotesize,midway,left] {2};
+	\end{tikzpicture}
+%	\qquad\qquad
+%	\begin{tikzpicture}
+%		\draw[thin] (2,2) circle (2 cm);
+%		\draw[thin] (1.29289321882,1.29289321882) -- (1.29289321882,2.70710678118);
+%		\draw[thin] (1.29289321882,1.29289321882) -- (2.70710678118,1.29289321882);
+%		\draw[thin] (2.70710678118,2.70710678118) -- (2.70710678118,1.29289321882);
+%		\draw[thin] (2.70710678118,2.70710678118) -- (1.29289321882,2.70710678118);
+%		\draw[thin] (0.58578643763,0.58578643763) -- (1.29289321882,1.29289321882);
+%		\draw[thin] (3.41421356236,3.41421356236) -- (2.70710678118,2.70710678118);
+%		\draw[thin] (3.41421356236,0.58578643763) -- (2.70710678118,1.29289321882);
+%		\draw[thin] (0.58578643763,3.41421356236) -- (1.29289321882,2.70710678118);
+%		% \node at (2,2) {\includegraphics[clip=true, trim = 0.5cm 0 0.5cm 4cm, width=0.4\textwidth]{Figures/Obstacle_mesh.png}};
+%		\draw [thin,<->] (0,-0.3) -- (4,-0.3) node[draw=none,fill=none,font=\footnotesize,midway,below] {2};
+%		\node [font=\normalsize] at (0.4,3.7) {$\Omega_2$};
+%    \end{tikzpicture}
+	\caption{\label{fig:ObstacleMesh}
+	 Initial FE mesh for domains $\Omega_\infty$
+	 %, $\Omega_{2}$ mesh sizes $h = h_\infty, h_2$, respectively.
+	 % (l): Initial triangular mesh for $(\mathbb{P}_p\text{-bubble},\mathbb{P}_{p-1}\text{-broken})$ pair on $\Omega_\infty$.
+	%(r): Initial quadrilateral mesh for $(\mathbb{Q}_p\text{-bubble},\mathbb{Q}_{p-1}\text{-broken})$ pair on $\Omega_2$.
+	 %We consider various polynomial orders $p \geq 1$ and mesh sizes.
+	 }
+\end{figure}
+\end{minipage}    
+    % Button to go back
+    \hyperlink{example_1}{\beamerbutton{Back to Example 1}}
+\end{frame}
+
 \end{document}
 
 \appendix
